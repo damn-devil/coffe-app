@@ -34,7 +34,7 @@
         .light-theme {
             --bg-primary: #f5f7fa;
             --bg-secondary: #e9ecef;
-            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-card: rgba(255, 255, 255, 0.95);
             --bg-glass: rgba(29, 72, 227, 0.08);
             --bg-glass-hover: rgba(29, 72, 227, 0.15);
             --bg-glass-strong: rgba(29, 72, 227, 0.2);
@@ -108,7 +108,6 @@
             height: 60%;
             background: linear-gradient(90deg, 
                 transparent 0%, 
-                /* Меняйте эти цвета для разного эффекта сияния */
                 rgba(0, 255, 255, 0.3) 20%,
                 rgba(0, 150, 255, 0.4) 40%,
                 rgba(138, 43, 226, 0.3) 60%,
@@ -722,6 +721,7 @@
         .light-theme .form-textarea {
             background: rgba(0, 0, 0, 0.03);
             border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-primary);
         }
 
         .form-input:focus, .form-select:focus, .form-textarea:focus {
@@ -863,30 +863,58 @@
             border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* === ПЛАВАЮЩАЯ НАВИГАЦИЯ === */
+        /* === ПЛАВАЮЩАЯ НАВИГАЦИЯ С АНИМАЦИЕЙ ЖИДКОГО СТЕКЛА === */
         .floating-nav {
             position: fixed;
-            bottom: 15px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: var(--blur-amount);
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 50px;
             padding: 12px 20px;
-            box-shadow: var(--shadow);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .light-theme .floating-nav {
-            background: rgba(240, 240, 240, 0.95);
+            background: rgba(240, 240, 240, 0.7);
             border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Анимация при наведении - эффект "жидкого стекла" */
+        .floating-nav:hover {
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                0 0 20px rgba(29, 72, 227, 0.2);
+            transform: translateX(-50%) scale(1.02);
+        }
+
+        .light-theme .floating-nav:hover {
+            background: rgba(250, 250, 250, 0.85);
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(29, 72, 227, 0.1);
         }
 
         .nav-island {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             align-items: center;
+            transition: all 0.3s ease;
         }
 
         .nav-island__link {
@@ -895,28 +923,146 @@
             font-weight: 500;
             padding: 10px 16px;
             border-radius: 25px;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             white-space: nowrap;
             font-size: 0.85rem;
             display: flex;
             align-items: center;
             gap: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-island__link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-island__link:hover::before {
+            left: 100%;
         }
 
         .nav-island__link:hover {
             color: var(--text-primary);
             background: var(--bg-glass);
+            transform: translateY(-1px);
         }
 
         .nav-island__link--cta {
             background: var(--bg-glass-strong);
             color: var(--text-primary);
+            box-shadow: 0 4px 15px rgba(29, 72, 227, 0.3);
+        }
+
+        .nav-island__link--cta:hover {
+            background: var(--bg-glass-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(29, 72, 227, 0.4);
         }
 
         .nav-divider {
             color: var(--text-secondary);
             opacity: 0.3;
             font-weight: 300;
+            margin: 0 5px;
+        }
+
+        /* === ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ === */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .theme-toggle:hover {
+            color: var(--text-primary);
+            background: var(--bg-glass);
+            transform: rotate(15deg);
+        }
+
+        /* === ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКОВ === */
+        .language-selector {
+            position: relative;
+            display: inline-block;
+        }
+
+        .language-button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 10px 16px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .language-button:hover {
+            color: var(--text-primary);
+            background: var(--bg-glass);
+        }
+
+        .language-dropdown {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            backdrop-filter: var(--blur-amount);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius-medium);
+            padding: 10px;
+            min-width: 120px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .light-theme .language-dropdown {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .language-selector:hover .language-dropdown {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .language-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: var(--border-radius-small);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .language-option:hover {
+            background: var(--bg-glass);
         }
 
         /* === ЗАГОЛОВКИ === */
@@ -999,12 +1145,14 @@
                 bottom: 10px;
                 width: calc(100% - 20px);
                 max-width: 400px;
+                padding: 10px 15px;
             }
 
             .nav-island {
                 justify-content: space-between;
                 overflow-x: auto;
                 padding: 0 5px;
+                gap: 5px;
             }
 
             .nav-island__link {
@@ -1012,98 +1160,47 @@
                 padding: 8px 12px;
             }
 
+            .nav-island__link span {
+                display: none;
+            }
+
             .nav-divider {
+                display: none;
+            }
+
+            .theme-toggle, .language-button {
+                padding: 8px;
+                width: 36px;
+                height: 36px;
+            }
+
+            .language-button span {
                 display: none;
             }
         }
 
-        /* === ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ === */
-        .theme-toggle {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        @media (max-width: 480px) {
+            .hero-buttons .glass-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
 
-        .theme-toggle:hover {
-            color: var(--text-primary);
-            background: var(--bg-glass);
-        }
+            .floating-nav {
+                width: 98%;
+            }
 
-        /* === ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКОВ === */
-        .language-selector {
-            position: relative;
-            display: inline-block;
-        }
+            .nav-island__link {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
 
-        .language-button {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 10px 16px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
+            .aurora-logo {
+                font-size: 1.5rem;
+            }
 
-        .language-button:hover {
-            color: var(--text-primary);
-            background: var(--bg-glass);
-        }
-
-        .language-dropdown {
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-card);
-            backdrop-filter: var(--blur-amount);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: var(--border-radius-medium);
-            padding: 10px;
-            min-width: 120px;
-            box-shadow: var(--shadow);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            margin-bottom: 10px;
-        }
-
-        .light-theme .language-dropdown {
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .language-selector:hover .language-dropdown {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .language-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            border-radius: var(--border-radius-small);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--text-primary);
-            text-decoration: none;
-            font-size: 0.85rem;
-        }
-
-        .language-option:hover {
-            background: var(--bg-glass);
+            .aurora-subtitle {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -1131,23 +1228,23 @@
         <div class="nav-island">
             <a href="#services" class="nav-island__link">
                 <i class="fas fa-language"></i>
-                <span class="nav-text">Услуги</span>
+                <span class="nav-text" data-ru="Услуги" data-en="Services" data-tk="Hyzmatlar" data-zh="服务">Услуги</span>
             </a>
             <a href="#languages" class="nav-island__link">
                 <i class="fas fa-globe"></i>
-                <span class="nav-text">Языки</span>
+                <span class="nav-text" data-ru="Языки" data-en="Languages" data-tk="Diller" data-zh="语言">Языки</span>
             </a>
-            <a href="#features" class="nav-island__link">
+            <a href="#advantages" class="nav-island__link">
                 <i class="fas fa-star"></i>
-                <span class="nav-text">Преимущества</span>
+                <span class="nav-text" data-ru="Преимущества" data-en="Advantages" data-tk="Arzuwlar" data-zh="优势">Преимущества</span>
             </a>
-            <a href="#testimonials" class="nav-island__link">
+            <a href="#reviews" class="nav-island__link">
                 <i class="fas fa-comment"></i>
-                <span class="nav-text">Отзывы</span>
+                <span class="nav-text" data-ru="Отзывы" data-en="Reviews" data-tk="Synlar" data-zh="评论">Отзывы</span>
             </a>
-            <a href="#contact" class="nav-island__link nav-island__link--cta">
+            <a href="#order" class="nav-island__link nav-island__link--cta">
                 <i class="fas fa-paper-plane"></i>
-                <span class="nav-text">Заявка</span>
+                <span class="nav-text" data-ru="Заказать" data-en="Order" data-tk="Sargyt" data-zh="订购">Заказать</span>
             </a>
             
             <!-- Разделитель -->
@@ -1190,65 +1287,59 @@
     <!-- Hero секция -->
     <section class="hero" id="home">
         <div class="hero-content">
-            <h1 class="hero-title">Профессиональный перевод документов в Минске</h1>
-            <p class="hero-subtitle">Официальные переводы с нотариальным заверением. Более 50 языков. Срочные переводы за 1-2 часа.</p>
+            <h1 class="hero-title" data-ru="Профессиональный перевод документов" data-en="Professional Document Translation" data-tk="Hünärli resminama terjimesi" data-zh="专业文件翻译">Профессиональный перевод документов</h1>
+            <p class="hero-subtitle" data-ru="Официальные переводы с нотариальным заверением. Более 50 языков. Срочные переводы за 1-2 часа." data-en="Official translations with notarization. Over 50 languages. Urgent translations in 1-2 hours." data-tk="Notarial tassyklamaly resmi terjimeler. 50-den gowrak dil. 1-2 sagatda çalt terjimeler." data-zh="官方翻译带公证。超过50种语言。紧急翻译1-2小时内完成。">Официальные переводы с нотариальным заверением. Более 50 языков. Срочные переводы за 1-2 часа.</p>
             <div class="hero-buttons">
-                <a href="#contact" class="glass-btn glass-btn--primary">
+                <a href="#order" class="glass-btn glass-btn--primary">
                     <i class="fas fa-paper-plane"></i>
-                    Заказать перевод
+                    <span data-ru="Заказать перевод" data-en="Order Translation" data-tk="Terjime sargyt" data-zh="订购翻译">Заказать перевод</span>
                 </a>
                 <a href="https://yandex.com/maps/org/mylingvo_by/217258172036?si=1mbrcg620j2pa32uytxj3eqc64" class="glass-btn" target="_blank">
                     <i class="fas fa-map-marker-alt"></i>
-                    Показать на карте
+                    <span data-ru="Показать на карте" data-en="Show on Map" data-tk="Kartada görkez" data-zh="在地图上显示">Показать на карте</span>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Секция услуг -->
+    <!-- Услуги и акции -->
     <section class="section" id="services">
         <div class="container">
-            <h2 class="section-title">Наши услуги</h2>
-            <p class="section-subtitle">Полный спектр переводческих услуг с гарантией качества и соблюдением сроков</p>
+            <h2 class="section-title" data-ru="Специальные предложения" data-en="Special Offers" data-tk="Ýörite teklipler" data-zh="特别优惠">Специальные предложения</h2>
+            <p class="section-subtitle" data-ru="Действие акций до 31 декабря 2025 года" data-en="Promotions valid until December 31, 2025" data-tk="Aksiýalar 2025-nji ýylyň 31-nji dekabryna çenli" data-zh="促销活动有效期至2025年12月31日">Действие акций до 31 декабря 2025 года</p>
             
             <div class="services-grid">
                 <div class="service-card fade-in">
-                    <div class="service-card__icon">
-                        <i class="fas fa-passport"></i>
-                    </div>
-                    <h3 class="service-card__title">Перевод личных документов</h3>
-                    <p>Паспорта, свидетельства, дипломы, справки с нотариальным заверением</p>
-                    <div class="service-card__price">
-                        <span class="service-card__old-price">от 25 руб.</span>
-                        от 20 руб.
-                    </div>
-                    <div class="service-card__badge">Срочный перевод за 1-2 часа</div>
+                    <div class="service-card__icon"><i class="fas fa-passport"></i></div>
+                    <div class="service-card__badge"><i class="fas fa-fire"></i> <span data-ru="Акция" data-en="Sale" data-tk="Aksiýa" data-zh="促销">Акция</span></div>
+                    <h3 class="service-card__title" data-ru="Перевод с английского языка" data-en="Translation from English" data-tk="Iňlis dilinden terjime" data-zh="英语翻译">Перевод с английского языка</h3>
+                    <p data-ru="Перевод + нотариальное заверение" data-en="Translation + notarization" data-tk="Terjime + notarial tassyklama" data-zh="翻译+公证">Перевод + нотариальное заверение</p>
+                    <div class="service-card__price"><span class="service-card__old-price">57 BYN</span>50 BYN</div>
+                    <button class="glass-btn" style="width: 100%; justify-content: center;" onclick="scrollToSection('order')">
+                        <span data-ru="Заказать" data-en="Order" data-tk="Sargyt" data-zh="订购">Заказать</span>
+                    </button>
                 </div>
-                
+
                 <div class="service-card fade-in">
-                    <div class="service-card__icon">
-                        <i class="fas fa-file-contract"></i>
-                    </div>
-                    <h3 class="service-card__title">Юридические переводы</h3>
-                    <p>Договоры, учредительные документы, доверенности, судебные решения</p>
-                    <div class="service-card__price">
-                        <span class="service-card__old-price">от 30 руб.</span>
-                        от 25 руб.
-                    </div>
-                    <div class="service-card__badge">Точность терминологии</div>
+                    <div class="service-card__icon"><i class="fas fa-file-contract"></i></div>
+                    <div class="service-card__badge"><i class="fas fa-fire"></i> <span data-ru="Акция" data-en="Sale" data-tk="Aksiýa" data-zh="促销">Акция</span></div>
+                    <h3 class="service-card__title" data-ru="Перевод с туркменского языка" data-en="Translation from Turkmen" data-tk="Türkmen dilinden terjime" data-zh="土库曼语翻译">Перевод с туркменского языка</h3>
+                    <p data-ru="Перевод + нотариальное заверение" data-en="Translation + notarization" data-tk="Terjime + notarial tassyklama" data-zh="翻译+公证">Перевод + нотариальное заверение</p>
+                    <div class="service-card__price"><span class="service-card__old-price">60 BYN</span>50 BYN</div>
+                    <button class="glass-btn" style="width: 100%; justify-content: center;" onclick="scrollToSection('order')">
+                        <span data-ru="Заказать" data-en="Order" data-tk="Sargyt" data-zh="订购">Заказать</span>
+                    </button>
                 </div>
-                
+
                 <div class="service-card fade-in">
-                    <div class="service-card__icon">
-                        <i class="fas fa-stethoscope"></i>
-                    </div>
-                    <h3 class="service-card__title">Медицинские переводы</h3>
-                    <p>Выписки из истории болезни, рецепты, заключения врачей, инструкции</p>
-                    <div class="service-card__price">
-                        <span class="service-card__old-price">от 35 руб.</span>
-                        от 30 руб.
-                    </div>
-                    <div class="service-card__badge">Специализированные переводчики</div>
+                    <div class="service-card__icon"><i class="fas fa-globe"></i></div>
+                    <div class="service-card__badge"><i class="fas fa-fire"></i> <span data-ru="Акция" data-en="Sale" data-tk="Aksiýa" data-zh="促销">Акция</span></div>
+                    <h3 class="service-card__title" data-ru="Перевод с узбекского языка" data-en="Translation from Uzbek" data-tk="Özbek dilinden terjime" data-zh="乌兹别克语翻译">Перевод с узбекского языка</h3>
+                    <p data-ru="Перевод + нотариальное заверение" data-en="Translation + notarization" data-tk="Terjime + notarial tassyklama" data-zh="翻译+公证">Перевод + нотариальное заверение</p>
+                    <div class="service-card__price"><span class="service-card__old-price">75 BYN</span>65 BYN</div>
+                    <button class="glass-btn" style="width: 100%; justify-content: center;" onclick="scrollToSection('order')">
+                        <span data-ru="Заказать" data-en="Order" data-tk="Sargyt" data-zh="订购">Заказать</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1257,229 +1348,175 @@
     <!-- Секция языков -->
     <section class="section languages-section" id="languages">
         <div class="container">
-            <h2 class="section-title">Языки перевода</h2>
-            <p class="section-subtitle">Работаем с более чем 50 языками мира, включая редкие и восточные</p>
+            <h2 class="section-title" data-ru="35+ языков перевода" data-en="35+ Translation Languages" data-tk="35+ terjime dili" data-zh="35+种翻译语言">35+ языков перевода</h2>
+            <p class="section-subtitle" data-ru="Работаем с редкими и популярными языками мира" data-en="We work with rare and popular world languages" data-tk="Az we meşhur dünýä dilleri bilen işleýäris" data-zh="我们处理稀有和流行的世界语言">Работаем с редкими и популярными языками мира</p>
             
             <div class="languages-grid">
-                <div class="language-item fade-in">
-                    <span class="language-item__flag">🇬🇧</span>
-                    <div class="language-item__name">Английский</div>
-                </div>
-                <div class="language-item fade-in">
-                    <span class="language-item__flag">🇩🇪</span>
-                    <div class="language-item__name">Немецкий</div>
-                </div>
-                <div class="language-item fade-in">
-                    <span class="language-item__flag">🇫🇷</span>
-                    <div class="language-item__name">Французский</div>
-                </div>
-                <div class="language-item fade-in">
-                    <span class="language-item__flag">🇪🇸</span>
-                    <div class="language-item__name">Испанский</div>
-                </div>
-                <div class="language-item fade-in">
-                    <span class="language-item__flag">🇨🇳</span>
-                    <div class="language-item__name">Китайский</div>
-                </div>
-                <div class="language-item fade-in">
-                    <span class="language-item__flag">🇦🇷</span>
-                    <div class="language-item__name">Арабский</div>
-                </div>
-                <div class="language-item fade-in">
-                    <span class="language-item__flag">🇹🇲</span>
-                    <div class="language-item__name">Туркменский</div>
-                </div>
-                <div class="language-item fade-in">
-                    <span class="language-item__flag">🇵🇱</span>
-                    <div class="language-item__name">Польский</div>
-                </div>
+                <div class="language-item fade-in"><span class="language-item__flag">🇺🇸</span><div class="language-item__name" data-ru="Английский" data-en="English" data-tk="Iňlis" data-zh="英语">Английский</div></div>
+                <div class="language-item fade-in"><span class="language-item__flag">🇹🇲</span><div class="language-item__name" data-ru="Туркменский" data-en="Turkmen" data-tk="Türkmen" data-zh="土库曼语">Туркменский</div></div>
+                <div class="language-item fade-in"><span class="language-item__flag">🇺🇿</span><div class="language-item__name" data-ru="Узбекский" data-en="Uzbek" data-tk="Özbek" data-zh="乌兹别克语">Узбекский</div></div>
+                <div class="language-item fade-in"><span class="language-item__flag">🇨🇳</span><div class="language-item__name" data-ru="Китайский" data-en="Chinese" data-tk="Hytaý" data-zh="中文">Китайский</div></div>
+                <div class="language-item fade-in"><span class="language-item__flag">🇷🇺</span><div class="language-item__name" data-ru="Русский" data-en="Russian" data-tk="Rus" data-zh="俄语">Русский</div></div>
+                <div class="language-item fade-in"><span class="language-item__flag">🇩🇪</span><div class="language-item__name" data-ru="Немецкий" data-en="German" data-tk="Nemes" data-zh="德语">Немецкий</div></div>
+                <div class="language-item fade-in"><span class="language-item__flag">🇫🇷</span><div class="language-item__name" data-ru="Французский" data-en="French" data-tk="Fransuz" data-zh="法语">Французский</div></div>
+                <div class="language-item fade-in"><span class="language-item__flag">🇪🇸</span><div class="language-item__name" data-ru="Испанский" data-en="Spanish" data-tk="Ispan" data-zh="西班牙语">Испанский</div></div>
+                <div class="language-item fade-in"><span class="language-item__flag">🇵🇱</span><div class="language-item__name" data-ru="Польский" data-en="Polish" data-tk="Polýak" data-zh="波兰语">Польский</div></div>
+                <div class="language-item fade-in"><span class="language-item__flag">🇱🇹</span><div class="language-item__name" data-ru="Литовский" data-en="Lithuanian" data-tk="Litwa" data-zh="立陶宛语">Литовский</div></div>
+                <div class="language-item fade-in"><span class="language-item__flag">🇱🇻</span><div class="language-item__name" data-ru="Латышский" data-en="Latvian" data-tk="Latys" data-zh="拉脱维亚语">Латышский</div></div>
+                <div class="language-item fade-in"><span class="language-item__flag">🌍</span><div class="language-item__name" data-ru="И другие..." data-en="And others..." data-tk="We beýlekiler..." data-zh="和其他...">И другие...</div></div>
             </div>
         </div>
     </section>
 
-    <!-- Секция преимуществ -->
-    <section class="section" id="features">
+    <!-- Преимущества -->
+    <section class="section" id="advantages">
         <div class="container">
-            <h2 class="section-title">Почему выбирают нас</h2>
-            <p class="section-subtitle">Более 10 лет предоставляем качественные переводческие услуги в Минске</p>
+            <h2 class="section-title" data-ru="Почему выбирают нас" data-en="Why Choose Us" data-tk="Näme üçin bizi saýlaýarlar" data-zh="为什么选择我们">Почему выбирают нас</h2>
+            <p class="section-subtitle" data-ru="Более 10 лет профессиональной работы с документами" data-en="Over 10 years of professional document work" data-tk="10 ýyldan gowrak resminamalar bilen hünärli iş" data-zh="超过10年的专业文件处理经验">Более 10 лет профессиональной работы с документами</p>
             
             <div class="features-grid">
                 <div class="feature-card fade-in">
-                    <div class="feature-card__icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3 class="feature-card__title">Гарантия качества</h3>
-                    <p class="feature-card__description">Все переводы проходят двойную проверку - редактором и носителем языка</p>
+                    <div class="feature-card__icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3 class="feature-card__title" data-ru="Гарантия качества" data-en="Quality Guarantee" data-tk="Hili üpjünçiligi" data-zh="质量保证">Гарантия качества</h3>
+                    <p class="feature-card__description" data-ru="Все переводы проверяются носителями языка и заверяются нотариально" data-en="All translations are checked by native speakers and notarized" data-tk="Ähli terjimeler dil asly bolanlar tarapyndan barlanylýar we notarial tassyklanylýar" data-zh="所有翻译均由母语人士检查并经过公证">Все переводы проверяются носителями языка и заверяются нотариально</p>
                 </div>
-                
+
                 <div class="feature-card fade-in">
-                    <div class="feature-card__icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <h3 class="feature-card__title">Срочные переводы</h3>
-                    <p class="feature-card__description">Выполняем срочные переводы за 1-2 часа без потери качества</p>
+                    <div class="feature-card__icon"><i class="fas fa-clock"></i></div>
+                    <h3 class="feature-card__title" data-ru="Срочные переводы" data-en="Urgent Translations" data-tk="Çalt terjimeler" data-zh="紧急翻译">Срочные переводы</h3>
+                    <p class="feature-card__description" data-ru="Выполняем срочные переводы за 1-2 часа без потери качества" data-en="We perform urgent translations in 1-2 hours without quality loss" data-tk="Hili peseltmezden 1-2 sagatda çalt terjimeler ýerine ýetirýäris" data-zh="我们在1-2小时内完成紧急翻译，不损失质量">Выполняем срочные переводы за 1-2 часа без потери качества</p>
                 </div>
-                
+
                 <div class="feature-card fade-in">
-                    <div class="feature-card__icon">
-                        <i class="fas fa-certificate"></i>
-                    </div>
-                    <h3 class="feature-card__title">Нотариальное заверение</h3>
-                    <p class="feature-card__description">Официальное заверение переводов у нотариуса включено в стоимость</p>
+                    <div class="feature-card__icon"><i class="fas fa-dollar-sign"></i></div>
+                    <h3 class="feature-card__title" data-ru="Доступные цены" data-en="Affordable Prices" data-tk="Elýeterli bahalar" data-zh="实惠价格">Доступные цены</h3>
+                    <p class="feature-card__description" data-ru="Постоянные акции и скидки для новых и постоянных клиентов" data-en="Regular promotions and discounts for new and regular customers" data-tk="Täze we yzygiderli müşderiler üçin yzygiderli aksiýalar we arzanladyşlar" data-zh="为新老客户提供定期促销和折扣">Постоянные акции и скидки для новых и постоянных клиентов</p>
                 </div>
-                
+
                 <div class="feature-card fade-in">
-                    <div class="feature-card__icon">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <h3 class="feature-card__title">Конфиденциальность</h3>
-                    <p class="feature-card__description">Строгое соблюдение конфиденциальности всех переводимых документов</p>
+                    <div class="feature-card__icon"><i class="fas fa-headset"></i></div>
+                    <h3 class="feature-card__title" data-ru="Поддержка 24/7" data-en="24/7 Support" data-tk="24/7 goldaw" data-zh="24/7支持">Поддержка 24/7</h3>
+                    <p class="feature-card__description" data-ru="Консультация и ответы на вопросы в любое время суток" data-en="Consultation and answers to questions at any time of day" data-tk="Günüň islendik wagty maslahat we soraglara jogap" data-zh="全天候咨询和问题解答">Консультация и ответы на вопросы в любое время суток</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Секция карты -->
-    <section class="map-section" id="map">
+    <!-- Форма заявки -->
+    <section class="section form-section" id="order">
+        <div class="container">
+            <h2 class="section-title" data-ru="Заказать перевод" data-en="Order Translation" data-tk="Terjime sargyt" data-zh="订购翻译">Заказать перевод</h2>
+            <p class="section-subtitle" data-ru="Оставьте заявку и мы свяжемся с вами в течение 15 минут" data-en="Leave a request and we will contact you within 15 minutes" data-tk="Haýyş goýuň we 15 minut içinde siziň bilen habarlaşarys" data-zh="留下请求，我们将在15分钟内与您联系">Оставьте заявку и мы свяжемся с вами в течение 15 минут</p>
+            
+            <div class="form-container fade-in">
+                <form id="order-form">
+                    <div class="form-group">
+                        <label class="form-label" data-ru="Ваше имя" data-en="Your Name" data-tk="Adyňyz" data-zh="您的姓名">Ваше имя</label>
+                        <input type="text" class="form-input" placeholder data-ru="Иван Иванов" data-en="John Smith" data-tk="Iwan Iwanow" data-zh="张三" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-ru="Номер телефона" data-en="Phone Number" data-tk="Telefon belgi" data-zh="电话号码">Номер телефона</label>
+                        <input type="tel" class="form-input" placeholder data-ru="+375 (__) ___-__-__" data-en="+1 (___) ___-____" data-tk="+993 (__) __-__-__" data-zh="+86 ___________" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-ru="Язык перевода" data-en="Translation Language" data-tk="Terjime dili" data-zh="翻译语言">Язык перевода</label>
+                        <select class="form-select" required>
+                            <option value="" data-ru="Выберите язык" data-en="Select language" data-tk="Dili saýlaň" data-zh="选择语言">Выберите язык</option>
+                            <option value="english" data-ru="Английский" data-en="English" data-tk="Iňlis" data-zh="英语">Английский</option>
+                            <option value="turkmen" data-ru="Туркменский" data-en="Turkmen" data-tk="Türkmen" data-zh="土库曼语">Туркменский</option>
+                            <option value="uzbek" data-ru="Узбекский" data-en="Uzbek" data-tk="Özbek" data-zh="乌兹别克语">Узбекский</option>
+                            <option value="chinese" data-ru="Китайский" data-en="Chinese" data-tk="Hytaý" data-zh="中文">Китайский</option>
+                            <option value="german" data-ru="Немецкий" data-en="German" data-tk="Nemes" data-zh="德语">Немецкий</option>
+                            <option value="french" data-ru="Французский" data-en="French" data-tk="Fransuz" data-zh="法语">Французский</option>
+                            <option value="other" data-ru="Другой язык" data-en="Other language" data-tk="Beýleki dil" data-zh="其他语言">Другой язык</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-ru="Тип документа" data-en="Document Type" data-tk="Resminama görnüşi" data-zh="文件类型">Тип документа</label>
+                        <select class="form-select" required>
+                            <option value="" data-ru="Выберите документ" data-en="Select document" data-tk="Resminamany saýlaň" data-zh="选择文件">Выберите документ</option>
+                            <option value="passport" data-ru="Паспорт" data-en="Passport" data-tk="Pasport" data-zh="护照">Паспорт</option>
+                            <option value="diploma" data-ru="Диплом" data-en="Diploma" data-tk="Diplom" data-zh="文凭">Диплом</option>
+                            <option value="certificate" data-ru="Свидетельство" data-en="Certificate" data-tk="Şaadatnama" data-zh="证书">Свидетельство</option>
+                            <option value="contract" data-ru="Договор" data-en="Contract" data-tk="Şertnama" data-zh="合同">Договор</option>
+                            <option value="other" data-ru="Другой документ" data-en="Other document" data-tk="Beýleki resminama" data-zh="其他文件">Другой документ</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-ru="Комментарий (необязательно)" data-en="Comment (optional)" data-tk="Düşündiriş (mecburi däl)" data-zh="评论（可选）">Комментарий (необязательно)</label>
+                        <textarea class="form-textarea" rows="3" placeholder data-ru="Дополнительная информация..." data-en="Additional information..." data-tk="Goşmaça maglumat..." data-zh="附加信息..."></textarea>
+                    </div>
+
+                    <button type="submit" class="glass-btn glass-btn--primary" style="width: 100%; justify-content: center;">
+                        <i class="fas fa-paper-plane"></i>
+                        <span data-ru="Отправить заявку" data-en="Send Request" data-tk="Haýyş iber" data-zh="发送请求">Отправить заявку</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Отзывы -->
+    <section class="section" id="reviews">
+        <div class="container">
+            <h2 class="section-title" data-ru="Отзывы клиентов" data-en="Customer Reviews" data-tk="Müşderi synlary" data-zh="客户评价">Отзывы клиентов</h2>
+            <p class="section-subtitle" data-ru="Более 5000 довольных клиентов за 10 лет работы" data-en="Over 5000 satisfied customers in 10 years of work" data-tk="10 ýyllyk işde 5000-den gowrak kanagatlan müşderi" data-zh="10年工作中超过5000名满意客户">Более 5000 довольных клиентов за 10 лет работы</p>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card fade-in">
+                    <p class="testimonial-text" data-ru="Заказывал перевод диплома для поступления в Польшу. Сделали очень быстро и качественно. Приняли без вопросов. Спасибо!" data-en="Ordered a diploma translation for admission to Poland. Done very quickly and quality. Accepted without questions. Thank you!" data-tk="Polşada okuwa girmek üçin diplom terjimesini sargyt etdim. Örän çalt we hili bilen ýerine ýetirildi. Soragsyz kabul edildi. Sagboluň!" data-zh="为进入波兰订购了文凭翻译。完成得非常快且质量好。毫无问题地被接受了。谢谢！">Заказывал перевод диплома для поступления в Польшу. Сделали очень быстро и качественно. Приняли без вопросов. Спасибо!</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">АК</div>
+                        <div>
+                            <div style="font-weight: 600;">Александр К.</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);" data-ru="студент" data-en="student" data-tk="student" data-zh="学生">студент</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card fade-in">
+                    <p class="testimonial-text" data-ru="Нужен был срочный перевод договора с китайского. Сделали за 3 часа! Очень выручили, теперь только к вам." data-en="Needed an urgent contract translation from Chinese. Done in 3 hours! Really helped out, now only to you." data-tk="Hytaý dilinden çalt şertnama terjimesi gerekdi. 3 sagatda ýerine ýetirildi! Hakykatdanam ýardam etdi, indi diňe size." data-zh="需要从中文紧急翻译合同。3小时内完成！真的帮了大忙，现在只找你们。">Нужен был срочный перевод договора с китайского. Сделали за 3 часа! Очень выручили, теперь только к вам.</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">МП</div>
+                        <div>
+                            <div style="font-weight: 600;">Марина П.</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);" data-ru="бизнесмен" data-en="businessman" data-tk="işewür" data-zh="商人">бизнесмен</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card fade-in">
+                    <p class="testimonial-text" data-ru="Переводили документы для визы в США. Все четко, профессионально. Нотариальное заверение включено в стоимость. Рекомендую!" data-en="Translated documents for US visa. Everything clear, professional. Notarization included in the price. Recommend!" data-tk="ABŞ wizasy üçin resminamalar terjime edildi. Ähli zat anyk, hünärli. Notarial tassyklama baha goşuldy. Maslahat berýärin!" data-zh="为美国签证翻译文件。一切清晰、专业。公证包含在价格中。推荐！">Переводили документы для визы в США. Все четко, профессионально. Нотариальное заверение включено в стоимость. Рекомендую!</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">ДС</div>
+                        <div>
+                            <div style="font-weight: 600;">Дмитрий С.</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);" data-ru="турист" data-en="tourist" data-tk="tурist" data-zh="游客">турист</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Секция с картой и анимацией -->
+    <section class="map-section" id="map-section">
         <div class="map-animation-container">
             <div class="map-custom-animation"></div>
         </div>
         
-        <div class="location-card fade-in">
-            <h3>Наш офис в Минске</h3>
-            <p>Мы находимся в центре города, рядом со станцией метро. Приходите к нам для консультации и заказа переводов.</p>
-            <p><strong>Адрес:</strong> ул. Якуба Коласа, 31</p>
-            <p><strong>Телефон:</strong> +375 (29) 123-45-67</p>
-            <p><strong>Время работы:</strong> Пн-Пт: 9:00-18:00</p>
-            <a href="https://yandex.com/maps/org/mylingvo_by/217258172036?si=1mbrcg620j2pa32uytxj3eqc64" class="glass-btn glass-btn--primary" target="_blank">
-                <i class="fas fa-map-marker-alt"></i>
-                Показать на карте
-            </a>
-        </div>
-    </section>
-
-    <!-- Секция отзывов -->
-    <section class="section" id="testimonials">
         <div class="container">
-            <h2 class="section-title">Отзывы клиентов</h2>
-            <p class="section-subtitle">Что говорят о нашей работе довольные клиенты</p>
-            
-            <div class="testimonials-grid">
-                <div class="testimonial-card fade-in">
-                    <p class="testimonial-text">Срочно нужен был перевод диплома для поступления в немецкий вуз. Сделали всё за 2 часа, качественно и аккуратно. Очень благодарна!</p>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar">АК</div>
-                        <div>
-                            <div class="testimonial-name">Анна К.</div>
-                            <div class="testimonial-role">Студентка</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="testimonial-card fade-in">
-                    <p class="testimonial-text">Регулярно заказываем перевод договоров для нашей компании. Всегда выполняют в срок, никогда не было нареканий к качеству.</p>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar">ДС</div>
-                        <div>
-                            <div class="testimonial-name">Дмитрий С.</div>
-                            <div class="testimonial-role">Бизнесмен</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="testimonial-card fade-in">
-                    <p class="testimonial-text">Переводили медицинские документы для лечения за границей. Очень внимательно отнеслись ко всем терминам, всё было сделано идеально.</p>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar">МП</div>
-                        <div>
-                            <div class="testimonial-name">Мария П.</div>
-                            <div class="testimonial-role">Врач</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Секция формы -->
-    <section class="section form-section" id="contact">
-        <div class="container">
-            <h2 class="section-title">Оставить заявку</h2>
-            <p class="section-subtitle">Отправьте нам информацию о вашем заказе, и мы свяжемся с вами в течение 15 минут</p>
-            
-            <div class="form-container fade-in">
-                <form id="translationForm">
-                    <div class="form-group">
-                        <label class="form-label" for="name">Ваше имя</label>
-                        <input type="text" id="name" class="form-input" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="phone">Телефон</label>
-                        <input type="tel" id="phone" class="form-input" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="email">Email</label>
-                        <input type="email" id="email" class="form-input" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="languageFrom">Перевод с</label>
-                        <select id="languageFrom" class="form-select" required>
-                            <option value="">Выберите язык</option>
-                            <option value="russian">Русского</option>
-                            <option value="belarusian">Белорусского</option>
-                            <option value="english">Английского</option>
-                            <option value="german">Немецкого</option>
-                            <option value="other">Другого</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="languageTo">Перевод на</label>
-                        <select id="languageTo" class="form-select" required>
-                            <option value="">Выберите язык</option>
-                            <option value="russian">Русский</option>
-                            <option value="belarusian">Белорусский</option>
-                            <option value="english">Английский</option>
-                            <option value="german">Немецкий</option>
-                            <option value="other">Другой</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="documentType">Тип документа</label>
-                        <select id="documentType" class="form-select" required>
-                            <option value="">Выберите тип</option>
-                            <option value="passport">Паспорт</option>
-                            <option value="diploma">Диплом</option>
-                            <option value="certificate">Свидетельство</option>
-                            <option value="contract">Договор</option>
-                            <option value="medical">Медицинский документ</option>
-                            <option value="other">Другой</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="urgency">Срочность</label>
-                        <select id="urgency" class="form-select" required>
-                            <option value="standard">Стандартная (1-2 дня)</option>
-                            <option value="urgent">Срочная (4-8 часов)</option>
-                            <option value="express">Экспресс (1-2 часа)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="message">Дополнительная информация</label>
-                        <textarea id="message" class="form-textarea" rows="4"></textarea>
-                    </div>
-                    
-                    <button type="submit" class="glass-btn glass-btn--primary" style="width: 100%; justify-content: center;">
-                        <i class="fas fa-paper-plane"></i>
-                        Отправить заявку
-                    </button>
-                </form>
+            <div class="location-card fade-in">
+                <h3 data-ru="Мы здесь!" data-en="We are here!" data-tk="Biz şu ýerda!" data-zh="我们在这里！">Мы здесь!</h3>
+                <p data-ru="Приходите к нам для консультации и оформления документов в самом центре Минска" data-en="Come to us for consultation and document processing in the very center of Minsk" data-tk="Minskiň merkezinde maslahat we resminamalary düzmek üçin bize geliň" data-zh="来明斯克市中心找我们咨询和办理文件">Приходите к нам для консультации и оформления документов в самом центре Минска</p>
+                <button class="glass-btn glass-btn--primary" onclick="openMap()">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span data-ru="Показать на карте" data-en="Show on Map" data-tk="Kartada görkez" data-zh="在地图上显示">Показать на карте</span>
+                </button>
             </div>
         </div>
     </section>
@@ -1490,94 +1527,180 @@
             <div class="footer-content">
                 <div class="footer-column">
                     <h3>MyLingvo.by</h3>
-                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 15px;">Профессиональные переводческие услуги в Минске с 2012 года</p>
-                    <div class="footer-contact">
-                        <i class="fas fa-map-marker-alt"></i>
-                        ул. Якуба Коласа, 31, Минск
-                    </div>
-                    <div class="footer-contact">
-                        <i class="fas fa-phone"></i>
-                        +375 (29) 123-45-67
-                    </div>
-                    <div class="footer-contact">
-                        <i class="fas fa-envelope"></i>
-                        info@mylingvo.by
-                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;" data-ru="Профессиональный перевод документов с нотариальным заверением в Минске" data-en="Professional document translation with notarization in Minsk" data-tk="Minskde notarial tassyklamaly hünärli resminama terjimesi" data-zh="明斯克专业文件翻译带公证">Профессиональный перевод документов с нотариальным заверением в Минске</p>
                 </div>
-                
+
                 <div class="footer-column">
-                    <h3>Услуги</h3>
+                    <h3 data-ru="Контакты" data-en="Contacts" data-tk="Habarlaşmak" data-zh="联系方式">Контакты</h3>
+                    <div class="footer-contact"><i class="fas fa-phone"></i> +375 25 700 14 14</div>
+                    <div class="footer-contact"><i class="fas fa-envelope"></i> info@mylingvo.by</div>
+                    <div class="footer-contact"><i class="fas fa-map-marker-alt"></i> <span data-ru="г. Минск, пр. Независимости, 58" data-en="Minsk, Independence Ave, 58" data-tk="Minsk, Garaşsyzlyk şaýoly, 58" data-zh="明斯克, 独立大街, 58号">г. Минск, пр. Независимости, 58</span></div>
+                    <div class="footer-contact"><i class="fas fa-clock"></i> <span data-ru="Пн-Пт: 9:00-20:00, Сб-Вс: 10:00-18:00" data-en="Mon-Fri: 9:00-20:00, Sat-Sun: 10:00-18:00" data-tk="Du-An: 9:00-20:00, Şen-Ýek: 10:00-18:00" data-zh="周一至周五: 9:00-20:00, 周六-周日: 10:00-18:00">Пн-Пт: 9:00-20:00, Сб-Вс: 10:00-18:00</span></div>
+                </div>
+
+                <div class="footer-column">
+                    <h3 data-ru="Услуги" data-en="Services" data-tk="Hyzmatlar" data-zh="服务">Услуги</h3>
                     <ul class="footer-links">
-                        <li><a href="#services">Перевод документов</a></li>
-                        <li><a href="#services">Нотариальное заверение</a></li>
-                        <li><a href="#services">Срочные переводы</a></li>
-                        <li><a href="#services">Легализация документов</a></li>
-                        <li><a href="#services">Консульские переводы</a></li>
+                        <li><a href="#services" data-ru="Перевод документов" data-en="Document translation" data-tk="Resminama terjimesi" data-zh="文件翻译">Перевод документов</a></li>
+                        <li><a href="#services" data-ru="Нотариальное заверение" data-en="Notarization" data-tk="Notarial tassyklama" data-zh="公证">Нотариальное заверение</a></li>
+                        <li><a href="#services" data-ru="Срочные переводы" data-en="Urgent translations" data-tk="Çalt terjimeler" data-zh="紧急翻译">Срочные переводы</a></li>
+                        <li><a href="#languages" data-ru="Языки перевода" data-en="Translation languages" data-tk="Terjime dilleri" data-zh="翻译语言">Языки перевода</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
-                    <h3>Информация</h3>
+                    <h3 data-ru="Информация" data-en="Information" data-tk="Maglumat" data-zh="信息">Информация</h3>
                     <ul class="footer-links">
-                        <li><a href="#about">О компании</a></li>
-                        <li><a href="#prices">Цены</a></li>
-                        <li><a href="#languages">Языки перевода</a></li>
-                        <li><a href="#contact">Контакты</a></li>
-                        <li><a href="#map">Как добраться</a></li>
+                        <li><a href="#advantages" data-ru="О нас" data-en="About us" data-tk="Biz barada" data-zh="关于我们">О нас</a></li>
+                        <li><a href="#reviews" data-ru="Отзывы" data-en="Reviews" data-tk="Synlar" data-zh="评价">Отзывы</a></li>
+                        <li><a href="#order" data-ru="Сделать заказ" data-en="Make an order" data-tk="Sargyt et" data-zh="下订单">Сделать заказ</a></li>
+                        <li><a href="#map-section" data-ru="Контакты" data-en="Contacts" data-tk="Habarlaşmak" data-zh="联系方式">Контакты</a></li>
                     </ul>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
-                <p>&copy; 2023 MyLingvo.by. Все права защищены.</p>
+                <p>&copy; 2025 MyLingvo.by. <span data-ru="Все права защищены." data-en="All rights reserved." data-tk="Ähli hukuklar goralandyr." data-zh="版权所有。">Все права защищены.</span></p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Анимация загрузки северного сияния
-        document.addEventListener('DOMContentLoaded', function() {
+        // Текущий язык
+        let currentLanguage = 'ru';
+
+        // Анимация северного сияния в начале
+        function startAuroraAnimation() {
             const auroraAnimation = document.getElementById('auroraAnimation');
             
-            // Скрываем анимацию через 3 секунды
+            // Быстрая анимация - скрываем через 2.5 секунды
             setTimeout(() => {
                 auroraAnimation.classList.add('hidden');
+            }, 2500);
+        }
+
+        // Анимация появления элементов при скролле
+        function checkScroll() {
+            const elements = document.querySelectorAll('.fade-in');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
                 
-                // Удаляем элемент из DOM после завершения анимации
-                setTimeout(() => {
-                    auroraAnimation.remove();
-                }, 800);
-            }, 3000);
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // Прокрутка к секциям
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        // Открытие карты
+        function openMap() {
+            window.open('https://yandex.com/maps/org/mylingvo_by/217258172036?si=1mbrcg620j2pa32uytxj3eqc64', '_blank');
+        }
+
+        // Функция смены языка
+        function changeLanguage(lang) {
+            currentLanguage = lang;
             
-            // Анимация появления элементов при скролле
-            const fadeElements = document.querySelectorAll('.fade-in');
+            // Обновляем текст на кнопке выбора языка
+            const languageText = document.querySelector('.language-text');
+            const languageNames = {
+                'ru': 'Русский',
+                'en': 'English', 
+                'tk': 'Türkmençe',
+                'zh': '中文'
+            };
+            languageText.textContent = languageNames[lang];
             
-            const fadeInOnScroll = () => {
-                fadeElements.forEach(element => {
-                    const elementTop = element.getBoundingClientRect().top;
-                    const elementVisible = 150;
-                    
-                    if (elementTop < window.innerHeight - elementVisible) {
-                        element.classList.add('visible');
+            // Обновляем все элементы с data-атрибутами
+            document.querySelectorAll('[data-ru]').forEach(element => {
+                if (element.dataset[lang]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = element.dataset[lang];
+                    } else if (element.tagName === 'OPTION') {
+                        element.textContent = element.dataset[lang];
+                    } else {
+                        element.textContent = element.dataset[lang];
                     }
-                });
+                }
+            });
+            
+            // Сохраняем выбор языка
+            localStorage.setItem('language', lang);
+        }
+
+        // Обработчик формы
+        document.getElementById('order-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const messages = {
+                'ru': 'Спасибо за заявку! Мы свяжемся с вами в течение 15 минут.',
+                'en': 'Thank you for your request! We will contact you within 15 minutes.',
+                'tk': 'Haýyşyňyz üçin sagboluň! 15 minut içinde siziň bilen habarlaşarys.',
+                'zh': '感谢您的请求！我们将在15分钟内与您联系。'
             };
             
-            // Проверяем при загрузке и при скролле
-            window.addEventListener('scroll', fadeInOnScroll);
-            fadeInOnScroll(); // Проверяем сразу после загрузки
+            alert(messages[currentLanguage]);
+            this.reset();
+        });
+
+        // Обработчики событий
+        window.addEventListener('scroll', () => {
+            checkScroll();
+        });
+
+        window.addEventListener('load', () => {
+            checkScroll();
+            startAuroraAnimation();
             
-            // Переключение темы
+            // Восстанавливаем язык из localStorage
+            const savedLanguage = localStorage.getItem('language');
+            if (savedLanguage) {
+                changeLanguage(savedLanguage);
+            }
+            
+            // Восстанавливаем тему из localStorage
+            const savedTheme = localStorage.getItem('theme');
             const themeToggle = document.getElementById('themeToggle');
             const themeIcon = themeToggle.querySelector('i');
             
-            // Проверяем сохраненную тему
-            const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'light') {
                 document.body.classList.add('light-theme');
                 themeIcon.classList.remove('fa-moon');
                 themeIcon.classList.add('fa-sun');
             }
+        });
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            // Добавляем классы fade-in ко всем карточкам
+            const cards = document.querySelectorAll('.service-card, .language-item, .feature-card, .testimonial-card, .form-container, .location-card');
+            cards.forEach(card => {
+                card.classList.add('fade-in');
+            });
+            
+            // Первоначальная проверка видимости
+            checkScroll();
+            
+            // Обработчики для переключения языка
+            document.querySelectorAll('.language-option').forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+                });
+            });
+            
+            // Обработчик для переключения темы
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
             
             themeToggle.addEventListener('click', () => {
                 document.body.classList.toggle('light-theme');
@@ -1591,35 +1714,6 @@
                     themeIcon.classList.add('fa-moon');
                     localStorage.setItem('theme', 'dark');
                 }
-            });
-            
-            // Обработка формы
-            const translationForm = document.getElementById('translationForm');
-            
-            translationForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Здесь должна быть логика отправки формы
-                alert('Заявка отправлена! Мы свяжемся с вами в течение 15 минут.');
-                translationForm.reset();
-            });
-            
-            // Обработка переключения языков
-            const languageOptions = document.querySelectorAll('.language-option');
-            const languageText = document.querySelector('.language-text');
-            
-            languageOptions.forEach(option => {
-                option.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const lang = this.getAttribute('data-lang');
-                    
-                    // Обновляем текст на кнопке
-                    const langName = this.querySelector('span:last-child').textContent;
-                    languageText.textContent = langName;
-                    
-                    // Здесь можно добавить логику смены языка на сайте
-                    console.log('Выбран язык:', lang);
-                });
             });
         });
     </script>
