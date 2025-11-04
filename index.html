@@ -1819,13 +1819,78 @@
             checkScroll();
             
             // Обработчики для переключения языка
-            document.querySelectorAll('.language-option').forEach(option => {
-                option.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const lang = this.getAttribute('data-lang');
-                    changeLanguage(lang);
-                });
-            });
+            // Исправление выбора языка на мобильных устройствах
+const languageSelector = document.querySelector('.language-selector');
+const languageButton = document.querySelector('.language-button');
+const languageDropdown = document.querySelector('.language-dropdown');
+const languageOptions = document.querySelectorAll('.language-option');
+
+let isDropdownOpen = false;
+
+// Функция для открытия/закрытия dropdown
+function toggleDropdown() {
+    isDropdownOpen = !isDropdownOpen;
+    if (isDropdownOpen) {
+        languageDropdown.style.opacity = '1';
+        languageDropdown.style.visibility = 'visible';
+        languageDropdown.style.transform = 'translateX(-50%) translateY(0)';
+    } else {
+        languageDropdown.style.opacity = '0';
+        languageDropdown.style.visibility = 'hidden';
+        languageDropdown.style.transform = 'translateX(-50%) translateY(10px)';
+    }
+}
+
+// Обработчик для кнопки выбора языка
+languageButton.addEventListener('click', function(e) {
+    e.stopPropagation();
+    toggleDropdown();
+});
+
+// Обработчики для опций языка
+languageOptions.forEach(option => {
+    option.addEventListener('click', function(e) {
+        e.preventDefault();
+        const lang = this.getAttribute('data-lang');
+        changeLanguage(lang);
+        toggleDropdown(); // Закрываем dropdown после выбора
+    });
+});
+
+// Закрытие dropdown при клике вне его
+document.addEventListener('click', function(e) {
+    if (!languageSelector.contains(e.target) && isDropdownOpen) {
+        toggleDropdown();
+    }
+});
+
+// Закрытие dropdown при скролле
+window.addEventListener('scroll', function() {
+    if (isDropdownOpen) {
+        toggleDropdown();
+    }
+});
+
+// Обработчик для touch событий на мобильных
+languageButton.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleDropdown();
+});
+
+languageOptions.forEach(option => {
+    option.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        const lang = this.getAttribute('data-lang');
+        changeLanguage(lang);
+        toggleDropdown();
+    });
+});
+
+// Предотвращаем закрытие при клике внутри dropdown
+languageDropdown.addEventListener('click', function(e) {
+    e.stopPropagation();
+});
             
             // Обработчик для переключения темы
             const themeToggle = document.getElementById('themeToggle');
