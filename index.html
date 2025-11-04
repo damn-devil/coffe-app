@@ -612,7 +612,42 @@
             color: var(--text-primary);
             font-size: 0.8rem;
         }
+        /* Улучшения для dropdown на мобильных */
+@media (max-width: 768px) {
+    .language-dropdown {
+        position: fixed;
+        bottom: 70px;
+        left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        width: 90%;
+        max-width: 200px;
+        margin-bottom: 0;
+        transition: all 0.3s ease;
+        z-index: 1002;
+    }
+    
+    .language-option {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .language-option span:first-child {
+        font-size: 1.2rem;
+    }
+}
 
+/* Улучшения для очень маленьких экранов */
+@media (max-width: 480px) {
+    .language-dropdown {
+        bottom: 65px;
+        max-width: 180px;
+    }
+    
+    .language-option {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+}
         /* === ПРЕИМУЩЕСТВА === */
         .features-grid {
             display: grid;
