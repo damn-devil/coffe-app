@@ -1760,120 +1760,124 @@
         let isZooming = false;
         let zoomProgress = 0;
 
-        function initEarthAnimation() {
-            // Создаем сцену
-            scene = new THREE.Scene();
-            
-            // Создаем камеру
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
-            
-            // Создаем рендерер
-            renderer = new THREE.WebGLRenderer({ 
-                canvas: document.getElementById('earthCanvas'), 
-                alpha: true,
-                antialias: true 
-            });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setClearColor(0x000000, 0);
-            
-            // Добавляем освещение
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambientLight);
-            
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(5, 3, 5);
-            scene.add(directionalLight);
-            
-            // Загружаем FBX модель Земли
-            const loader = new THREE.FBXLoader();
-            loader.load(
-                'earth.fbx', // Файл FBX должен быть в той же папке
-                function(object) {
-                    earthObject = object;
-                    scene.add(earthObject);
-                    isEarthLoaded = true;
-                    
-                    // Масштабируем модель если нужно
-                    earthObject.scale.set(0.01, 0.01, 0.01); // Настройте под вашу модель
-                    
-                    // Центрируем модель
-                    const box = new THREE.Box3().setFromObject(earthObject);
-                    const center = box.getCenter(new THREE.Vector3());
-                    earthObject.position.sub(center);
-                    
-                    console.log('FBX модель загружена успешно');
-                    
-                    // Запускаем анимацию
-                    animateEarth();
-                },
-                function(xhr) {
-                    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-                },
-                function(error) {
-                    console.error('Error loading FBX model:', error);
-                    // Если FBX не загрузился, показываем fallback
-                    document.getElementById('earthFallback').style.opacity = '1';
-                }
-            );
-            
-            // Обработка изменения размера окна
-            window.addEventListener('resize', onWindowResize);
-        }
+function initEarthAnimation() {
+    // Создаем сцену
+    scene = new THREE.Scene();
+    
+    // Создаем камеру
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+    
+    // Создаем рендерер
+    renderer = new THREE.WebGLRenderer({ 
+        canvas: document.getElementById('earthCanvas'), 
+        alpha: true,
+        antialias: true 
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 0);
+    
+    // Добавляем освещение
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+    
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(5, 3, 5);
+    scene.add(directionalLight);
+    
+    // Загружаем и собираем FBX модель из частей
+    loadEarthFromParts();
+    
+    // Обработка изменения размера окна
+    window.addEventListener('resize', onWindowResize);
+}
 
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        function animateEarth() {
-            if (!isEarthLoaded) return;
-            
-            requestAnimationFrame(animateEarth);
-            
-            // Вращение Земли
-            earthObject.rotation.y += earthRotationSpeed;
-            
-            // Плавное масштабирование
-            if (Math.abs(currentScale - targetScale) > 0.01) {
-                currentScale += (targetScale - currentScale) * 0.05;
-                earthObject.scale.set(currentScale * 0.01, currentScale * 0.01, currentScale * 0.01);
+// Новая функция для загрузки частей
+async function loadEarthFromParts() {
+    try {
+        console.log('Начинаю загрузку частей FBX модели...');
+        
+        // Список частей (замените на ваши реальные имена файлов)
+        const partFiles = [
+            'earth_part_aa',
+            'earth_part_ab'
+            // Добавьте остальные части если их больше
+        ];
+        
+        // Загружаем все части
+        const parts = [];
+        for (const partFile of partFiles) {
+            console.log(`Загружаю ${partFile}...`);
+            const response = await fetch(partFile);
+            if (!response.ok) {
+                throw new Error(`Не удалось загрузить ${partFile}: ${response.status}`);
             }
-            
-            // Анимация приближения
-            if (isZooming && zoomProgress < 1) {
-                zoomProgress += 0.01;
-                camera.position.z = 5 - zoomProgress * 3.5;
+            const arrayBuffer = await response.arrayBuffer();
+            parts.push(arrayBuffer);
+            console.log(`${partFile} загружен (${arrayBuffer.byteLength} байт)`);
+        }
+        
+        // Объединяем в один файл
+        console.log('Объединяю части...');
+        const totalLength = parts.reduce((sum, part) => sum + part.byteLength, 0);
+        const fullArray = new Uint8Array(totalLength);
+        
+        let offset = 0;
+        for (const part of parts) {
+            fullArray.set(new Uint8Array(part), offset);
+            offset += part.byteLength;
+        }
+        
+        console.log(`Файл собран: ${totalLength} байт`);
+        
+        // Создаем Blob и загружаем через FBXLoader
+        const blob = new Blob([fullArray], {type: 'application/octet-stream'});
+        const objectUrl = URL.createObjectURL(blob);
+        
+        const loader = new THREE.FBXLoader();
+        
+        loader.load(objectUrl, 
+            // Успешная загрузка
+            function(object) {
+                console.log('✅ FBX модель успешно загружена!');
+                earthObject = object;
+                scene.add(earthObject);
+                isEarthLoaded = true;
                 
-                if (zoomProgress >= 1) {
-                    // Когда приближение завершено, заменяем на PNG
-                    setTimeout(() => {
-                        document.getElementById('earthCanvas').style.opacity = '0';
-                        document.getElementById('earthFallback').style.backgroundImage = 'url("map.png")';
-                        document.getElementById('earthFallback').style.opacity = '1';
-                    }, 500);
-                }
+                // Настройка модели
+                earthObject.scale.set(0.01, 0.01, 0.01);
+                
+                // Центрируем модель
+                const box = new THREE.Box3().setFromObject(earthObject);
+                const center = box.getCenter(new THREE.Vector3());
+                earthObject.position.sub(center);
+                
+                // Освобождаем память
+                URL.revokeObjectURL(objectUrl);
+                
+                console.log('3D Земля готова к анимации');
+                
+                // Запускаем анимацию
+                animateEarth();
+            },
+            // Прогресс загрузки
+            function(xhr) {
+                console.log((xhr.loaded / xhr.total * 100) + '% загружено');
+            },
+            // Ошибка загрузки
+            function(error) {
+                console.error('❌ Ошибка загрузки FBX:', error);
+                // Показываем fallback
+                document.getElementById('earthFallback').style.opacity = '1';
             }
-            
-            renderer.render(scene, camera);
-        }
-
-        function updateEarthAnimation() {
-            const mapSection = document.getElementById('map');
-            const rect = mapSection.getBoundingClientRect();
-            const windowHeight = window.innerHeight;
-            
-            // Вычисляем прогресс скролла к секции карты
-            const scrollProgress = Math.min(Math.max((windowHeight - rect.top) / (windowHeight * 0.8), 0), 1);
-            
-            if (scrollProgress > 0.3 && !isZooming) {
-                // Запускаем анимацию приближения
-                isZooming = true;
-                targetScale = 1.5;
-                earthRotationSpeed = 0.005;
-            }
-        }
+        );
+        
+    } catch (error) {
+        console.error('❌ Ошибка при загрузке частей:', error);
+        // Показываем fallback
+        document.getElementById('earthFallback').style.opacity = '1';
+    }
+}
     </script>
 </body>
 </html>
