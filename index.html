@@ -3,113 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyLingvo.by - Профессиональный перевод документов в Минске</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Three.js библиотеки -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Вместо OBJLoader подключаем FBXLoader -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js"></script>
-    
+    <title>🚿Бронирование душа</title>
     <style>
-        /* === БАЗОВАЯ СВЕТЛАЯ ТЕМА === */
-        :root {
-            --bg-primary: #f5f7fa;
-            --bg-secondary: #e9ecef;
-            --bg-card: rgba(255, 255, 255, 0.95);
-            --bg-glass: rgba(29, 72, 227, 0.08);
-            --bg-glass-hover: rgba(29, 72, 227, 0.15);
-            --bg-glass-strong: rgba(29, 72, 227, 0.2);
-            --text-primary: #1a1a1a;
-            --text-secondary: #5a5a5a;
-            --text-accent: #1d48e3;
-            --accent-blue: #1d48e3;
-            --accent-light: #1d48e3;
-            --shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            --border-radius: 28px;
-            --border-radius-medium: 20px;
-            --border-radius-small: 16px;
-            --blur-amount: blur(20px);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
+        :root {
+            --primary: #FFD700;
+            --secondary: #FFA500;
+            --accent: #FF8C00;
+            --text: #FFFFFF;
+            --text-light: #B0B0B0;
+            --background: #0A0A0A;
+            --card-bg: rgba(30, 30, 30, 0.8);
+            --border: rgba(255, 215, 0, 0.3);
+            --success: #32CD32;
+            --error: #FF4444;
+            --male: #FFD700;
+            --female: #FF69B4;
+            --bg-glass: rgba(255, 255, 255, 0.1);
         }
 
-        body {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* === АНИМАЦИИ СКРОЛЛА === */
-        .scroll-animations {
+        /* Статический фон */
+        .static-background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 999;
+            z-index: -1;
+            background: 
+                url('background.jpg') center/cover no-repeat,
+                linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #2A2A2A 100%);
         }
 
-        /* Первая анимация - синие свечения */
-        .light-trail {
+        /* Если картинки нет, будет градиент */
+        .static-background:before {
+            content: '';
             position: absolute;
-            width: 4px;
-            height: 100px;
-            background: linear-gradient(to bottom, transparent, #1d48e3, transparent);
-            border-radius: 50%;
-            filter: blur(2px);
-            opacity: 0;
-            animation: lightTrailMove 15s linear infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 165, 0, 0.08) 0%, transparent 50%);
         }
 
-        .light-trail:nth-child(1) {
-            left: 10%;
-            animation-delay: 0s;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #000000;
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+            padding: 20px;
+            transform: translateZ(0);
         }
 
-        .light-trail:nth-child(2) {
-            left: 50%;
-            animation-delay: 5s;
-        }
-
-        .light-trail:nth-child(3) {
-            left: 90%;
-            animation-delay: 10s;
-        }
-
-        @keyframes lightTrailMove {
-            0% {
-                transform: translateY(-100px);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.7;
-            }
-            90% {
-                opacity: 0.7;
-            }
-            100% {
-                transform: translateY(100vh);
-                opacity: 0;
-            }
-        }
-
-        /* === ЛОГОТИП В ВЕРХНЕМ ЛЕВОМ УГЛУ === */
-        .logo-header {
+        /* Fixed Header */
+        .fixed-header {
             position: fixed;
             top: 15px;
             left: 15px;
@@ -123,1761 +78,1175 @@
             box-shadow: 
                 0 8px 25px rgba(0, 0, 0, 0.08),
                 0 0 0 1px rgba(255, 255, 255, 0.5);
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        .logo-header:hover {
-            background: var(--bg-glass-hover);
-            backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(200%);
-            box-shadow: 
-                0 12px 35px rgba(0, 0, 0, 0.12),
-                0 0 0 1px rgba(255, 255, 255, 0.8),
-                0 0 20px rgba(29, 72, 227, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .logo-text {
-            font-size: 1.2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #1d48e3 0%, #4b87fd 100%);
+        .fixed-header h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFD700, #FFA500, #FF8C00);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin: 0;
         }
 
-        /* === АНИМАЦИЯ СЕВЕРНОГО СИЯНИЯ В НАЧАЛЕ === */
-        .aurora-animation {
+        /* Fixed Admin Button */
+        .fixed-admin-btn {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: 1000;
-            background: linear-gradient(135deg, #f5f7fa 0%, #d9e2ec 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.8s ease;
+            top: 15px;
+            right: 15px;
+            z-index: 1002;
         }
 
-        .aurora-animation.hidden {
-            opacity: 0;
-            pointer-events: none;
+        .fixed-admin-btn .btn {
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            background: var(--bg-glass);
+            transition: all 0.3s ease;
         }
 
-        /* Контейнер для северного сияния */
-        .aurora-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        /* Слои северного сияния */
-        .aurora-layer {
-            position: absolute;
-            top: 0;
-            left: -10%;
-            width: 120%;
-            height: 60%;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                rgba(0, 150, 255, 0.2) 20%,
-                rgba(29, 72, 227, 0.3) 40%,
-                rgba(138, 43, 226, 0.2) 60%,
-                rgba(255, 0, 255, 0.1) 80%,
-                transparent 100%);
-            filter: blur(20px);
-            animation: auroraFlow 8s ease-in-out infinite;
-            transform: skewY(-5deg);
-        }
-
-        .aurora-layer:nth-child(2) {
-            top: 20%;
-            animation-delay: -2s;
-            background: linear-gradient(90deg, 
-                transparent 0%,
-                rgba(0, 150, 255, 0.15) 30%,
-                rgba(29, 72, 227, 0.25) 50%,
-                rgba(138, 43, 226, 0.15) 70%,
-                transparent 100%);
-            height: 40%;
-        }
-
-        .aurora-layer:nth-child(3) {
-            top: 40%;
-            animation-delay: -4s;
-            background: linear-gradient(90deg, 
-                transparent 0%,
-                rgba(0, 100, 255, 0.05) 25%,
-                rgba(29, 72, 227, 0.15) 45%,
-                rgba(138, 43, 226, 0.05) 65%,
-                transparent 100%);
-            height: 30%;
-        }
-
-        /* Анимация плавного течения сияния */
-        @keyframes auroraFlow {
-            0%, 100% {
-                transform: translateX(-10%) skewY(-5deg);
-                opacity: 0.7;
-            }
-            50% {
-                transform: translateX(10%) skewY(-5deg);
-                opacity: 1;
-            }
-        }
-
-        /* Контент с логотипом */
-        .aurora-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 10;
-            opacity: 0;
-            animation: fadeInLogo 1s ease 1.5s forwards;
-        }
-
-        .aurora-logo {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #1d48e3 0%, #4b87fd 25%, #8a2be2 50%, #ff00ff 75%, #ff0066 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 20px rgba(29, 72, 227, 0.3);
-        }
-
-        .aurora-subtitle {
-            font-size: 1.2rem;
-            color: rgba(26, 26, 26, 0.8);
-            text-shadow: 0 0 10px rgba(29, 72, 227, 0.2);
-        }
-
-        /* Анимация появления логотипа */
-        @keyframes fadeInLogo {
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* === ОСНОВНЫЕ СЕКЦИИ === */
-        .section {
-            padding: 80px 15px;
-            position: relative;
+        .fixed-admin-btn .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 215, 0, 0.3);
+            border-color: var(--primary);
         }
 
         .container {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        
-        /* === HERO СЕКЦИЯ === */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 50%, #f5f7fa 100%);
-            overflow: hidden;
-            padding: 20px 15px;
+            margin: 80px auto 0;
+            padding: 20px;
         }
 
-        .hero::before {
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .fixed-header h1 {
+                font-size: 1.1rem;
+            }
+            
+            .fixed-admin-btn .btn {
+                padding: 10px 16px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-glass);
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+        }
+
+        .card h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card h2 i {
+            color: var(--primary);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 18px 22px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            font-size: 1rem;
+            background: var(--bg-glass);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            color: var(--text);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(25px) saturate(160%);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.2);
+        }
+
+        .input-field::placeholder {
+            color: var(--text-light);
+        }
+
+        /* Custom Select */
+        .custom-select {
+            position: relative;
+        }
+
+        .select-field {
+            width: 100%;
+            padding: 18px 22px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            font-size: 1rem;
+            background: var(--bg-glass);
+            color: var(--text);
+            cursor: pointer;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+           transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(25px) saturate(160%);
+            -webkit-backdrop-filter: blur(25px) saturate(160%);
+        }
+
+        .select-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.2);
+        }
+
+        .custom-select::after {
+            content: '⌄';
+            position: absolute;
+            top: 50%;
+            right: 22px;
+            transform: translateY(-50%);
+            font-size: 1.3rem;
+            color: var(--primary);
+            pointer-events: none;
+        }
+
+        /* iOS Style Dropdown */
+        .custom-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-glass);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            margin-top: 8px;
+            z-index: 1002;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(25px) saturate(160%);
+            -webkit-backdrop-filter: blur(25px) saturate(160%);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-12px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .custom-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .dropdown-option {
+            padding: 20px 22px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            color: var(--text);
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin: 4px 0;
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .dropdown-option::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 30% 20%, rgba(29, 72, 227, 0.05) 0%, transparent 50%);
-        }
-
-        .hero-content {
-            text-align: center;
-            position: relative;
-            z-index: 2;
-            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
             opacity: 0;
-            transform: translateY(30px);
-            animation: heroAppear 1s ease 2.5s forwards;
+            transition: opacity 0.3s ease;
+            border-radius: 16px;
         }
 
-        @keyframes heroAppear {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .dropdown-option:hover::before {
+            opacity: 1;
         }
 
-        .hero-title {
-            font-size: clamp(1.8rem, 6vw, 3rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #1a1a1a 0%, #5a5a5a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(0.9rem, 3vw, 1.1rem);
-            color: var(--text-secondary);
-            margin-bottom: 25px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.5;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 25px;
-        }
-
-        /* === СТЕКЛЯННЫЕ КНОПКИ === */
-        .glass-btn {
-            background: var(--bg-glass);
-            backdrop-filter: var(--blur-amount);
-            -webkit-backdrop-filter: var(--blur-amount);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 50px;
-            color: var(--text-primary);
-            padding: 12px 24px;
-            font-size: 14px;
+        .dropdown-option.selected {
+            background: rgba(255, 215, 0, 0.25);
+            color: var(--primary);
             font-weight: 600;
-            text-decoration: none;
+        }
+
+        .dropdown-option.selected::after {
+            content: '✓';
+            position: absolute;
+            right: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Time Select */
+        .time-select {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .time-select .custom-select {
+            flex: 1;
+        }
+
+        .time-separator {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.6rem;
+            margin-bottom: 18px;
+        }
+
+        /* Duration Select */
+        .duration-select {
+            margin-top: 15px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 20px 32px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            text-align: center;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
+            justify-content: center;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+            gap: 10px;
+            backdrop-filter: blur(25px) saturate(160%);
+            background: var(--bg-glass);
         }
 
-        .glass-btn--primary {
-            background: var(--bg-glass-strong);
-            border-color: rgba(29, 72, 227, 0.3);
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            width: 100%;
         }
 
-        .glass-btn:hover {
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--bg-glass);
+            color: var(--text);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(29, 72, 227, 0.2);
         }
 
-        /* === КАРТОЧКИ УСЛУГ === */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+        .btn-danger {
+            background: linear-gradient(135deg, #FF4444, #CC0000);
+            color: white;
         }
 
-        .service-card {
-            background: var(--bg-card);
-            backdrop-filter: var(--blur-amount);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: var(--border-radius);
-            padding: 25px 20px;
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 68, 68, 0.4);
+        }
+
+        /* Booking List */
+        .booking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .booking-item {
+            background: var(--bg-glass);
+            border-radius: 22px;
+            padding: 22px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow);
+            backdrop-filter: blur(20px) saturate(160%);
+            -webkit-backdrop-filter: blur(20px) saturate(160%);
         }
 
-        .service-card::before {
-            content: '';
-            position: absolute;
+        .booking-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.1);
+        }
+
+        .booking-item.expired {
+            opacity: 0.6;
+            border-color: var(--error);
+        }
+
+        .booking-item.male {
+            border-left: 6px solid var(--male);
+        }
+
+        .booking-item.female {
+            border-left: 6px solid var(--female);
+        }
+
+        .booking-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .booking-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .booking-details {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .booking-time {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .expired-badge {
+            background: var(--error);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .cancel-btn {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--error);
+            border: none;
+            padding: 12px 22px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .cancel-btn:hover:not(:disabled) {
+            background: var(--error);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .cancel-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Messages */
+        .message {
+            padding: 18px 22px;
+            border-radius: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 600;
+            backdrop-filter: blur(20px) saturate(160%);
+        }
+
+        .success {
+            background: rgba(50, 205, 50, 0.1);
+            color: var(--success);
+            border: 2px solid rgba(50, 205, 50, 0.3);
+        }
+
+        .error {
+            background: rgba(255, 68, 68, 0.1);
+            color: var(--error);
+            border: 2px solid rgba(255, 68, 68, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: var(--bg-glass);
+            border-radius: 25px;
+            padding: 30px;
+            margin-top: 40px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(30px) saturate(160%);
+            -webkit-backdrop-filter: blur(30px) saturate(160%);
+        }
+
+        .admin-panel.hidden {
+            display: none;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .admin-header h2 {
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-light));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .service-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-
-        .service-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .service-card__icon {
-            font-size: 1.8rem;
-            margin-bottom: 12px;
-            color: var(--accent-light);
-        }
-
-        .service-card__title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        .service-card__price {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--text-accent);
-            margin: 12px 0;
-            line-height: 1.2;
-        }
-
-        .service-card__old-price {
-            text-decoration: line-through;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-right: 6px;
-        }
-
-        .service-card__badge {
-            background: rgba(255, 215, 215, 0.3);
-            color: #ff6b6b;
-            padding: 5px 10px;
-            border-radius: 16px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-
-        /* === СЕКЦИЯ ПРАЙС-ЛИСТА === */
-        .pricing-section {
-            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .pricing-tabs {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .pricing-tab {
-            background: var(--bg-glass);
-            backdrop-filter: var(--blur-amount);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: var(--border-radius-medium);
-            padding: 12px 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .pricing-tab:hover {
-            transform: translateY(-3px);
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-
-        .pricing-tab.active {
-            background: var(--bg-glass-strong);
-            border-color: rgba(29, 72, 227, 0.3);
-        }
-
-        .pricing-content {
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.0);
+            backdrop-filter: blur(25px) saturate(160%);
             display: none;
-            background: var(--bg-card);
-            backdrop-filter: var(--blur-amount);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: var(--border-radius);
-            padding: 25px;
-            text-align: center;
-            box-shadow: var(--shadow);
-        }
-
-        .pricing-content.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .pricing-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .pricing-item:last-child {
-            border-bottom: none;
-        }
-
-        .pricing-item__service {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .pricing-item__price {
-            font-weight: 700;
-            color: var(--text-accent);
-        }
-        
-        /* === ПРЕИМУЩЕСТВА === */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .feature-card {
-            background: var(--bg-card);
-            backdrop-filter: var(--blur-amount);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: var(--border-radius);
-            padding: 25px 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(29, 72, 227, 0.2);
-        }
-
-        .feature-card__icon {
-            width: 50px;
-            height: 50px;
-            background: var(--bg-glass-strong);
-            border-radius: 50%;
-            display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px;
-            font-size: 1.3rem;
-            color: var(--accent-light);
+            z-index: 2000;
+            padding: 20px;
         }
 
-        .feature-card__title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        .feature-card__description {
-            color: var(--text-secondary);
-            line-height: 1.5;
-            font-size: 0.85rem;
-        }
-
-        /* === СЕКЦИЯ "О НАС" === */
-        .about-section {
-            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
-        }
-
-        .about-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .about-text {
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        /* === СЕКЦИЯ "ПОЧЕМУ ИМЕННО МЫ" === */
-        .why-us-section {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
-        }
-
-        /* === ФОРМА ЗАЯВКИ === */
-        .form-section {
-            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
-        }
-
-        .form-container {
-            max-width: 450px;
-            margin: 0 auto;
-            background: var(--bg-card);
-            backdrop-filter: var(--blur-amount);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: var(--border-radius);
-            padding: 25px 20px;
-            box-shadow: var(--shadow);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-        }
-
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: 12px 14px;
-            background: rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: var(--border-radius-small);
-            color: var(--text-primary);
-            font-size: 14px;
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--accent-light);
-            background: rgba(0, 0, 0, 0.05);
-        }
-
-        /* === СЕКЦИЯ С КАРТОЙ И АНИМАЦИЕЙ ЗЕМЛИ === */
-        .map-section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
-            overflow: hidden;
-        }
-
-        /* Контейнер для анимации Земли */
-        .earth-animation-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #earthCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        .earth-fallback {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #1a6aa1 0%, #0d3b66 40%, #08233b 100%);
-            box-shadow: 0 0 50px rgba(29, 72, 227, 0.3);
-            z-index: 1;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-
-        /* Табличка с информацией о местоположении */
-        .location-card {
-            position: relative;
-            z-index: 2;
-            background: var(--bg-card);
-            backdrop-filter: var(--blur-amount);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: var(--border-radius);
-            padding: 30px 20px;
-            text-align: center;
-            max-width: 450px;
-            width: 95%;
-            box-shadow: var(--shadow);
-        }
-
-        .location-card h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text-primary);
-        }
-
-        .location-card p {
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-            line-height: 1.5;
-            font-size: 0.9rem;
-        }
-
-        /* === ОТЗЫВЫ === */
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .testimonial-card {
-            background: var(--bg-card);
-            backdrop-filter: var(--blur-amount);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: var(--border-radius);
-            padding: 25px 20px;
-            position: relative;
-            box-shadow: var(--shadow);
-        }
-
-        .testimonial-card::before {
-            content: '"';
-            font-size: 2.5rem;
-            color: var(--accent-light);
-            opacity: 0.3;
-            position: absolute;
-            top: 8px;
-            left: 12px;
-            line-height: 1;
-        }
-
-        .testimonial-text {
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            font-style: italic;
-            position: relative;
-            z-index: 2;
-            line-height: 1.5;
-            font-size: 0.9rem;
-        }
-
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .testimonial-avatar {
-            width: 35px;
-            height: 35px;
-            background: var(--bg-glass-strong);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--accent-light);
-            font-size: 0.8rem;
-        }
-
-        /* === ФУТЕР === */
-        .footer {
-            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            padding: 30px 15px 15px;
-            position: relative;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 25px;
-            margin-bottom: 25px;
-        }
-
-        .footer-column h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text-primary);
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 8px;
-        }
-
-        .footer-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s ease;
-            font-size: 0.85rem;
-        }
-
-        .footer-links a:hover {
-            color: var(--accent-light);
-        }
-
-        .footer-contact {
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 15px;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-        }
-
-        /* === ПЛАВАЮЩАЯ НАВИГАЦИЯ С АНИМАЦИЕЙ ЖИДКОГО СТЕКЛА === */
-        .floating-nav {
-            position: fixed;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1001;
-            background: rgba(240, 240, 240, 0.06);
-            backdrop-filter: blur(25px) saturate(160%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 25px;
-            padding: 10px 15px;
-            box-shadow: 
-                0 8px 25px rgba(0, 0, 0, 0.08),
-                0 0 0 1px rgba(255, 255, 255, 0.5);
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            max-width: 95%;
-        }
-
-        /* Анимация при наведении - эффект "жидкого стекла" */
-        .floating-nav:hover {
-            background: rgba(250, 250, 250, 0.75);
-            backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(200%);
-            box-shadow: 
-                0 12px 35px rgba(0, 0, 0, 0.12),
-                0 0 0 1px rgba(255, 255, 255, 0.8),
-                0 0 20px rgba(29, 72, 227, 0.1);
-            transform: translateX(-50%) translateY(-3px);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-link:hover {
-            color: var(--text-primary);
-            background: rgba(0, 0, 0, 0.05);
-        }
-
-        .nav-link.active {
-            color: var(--text-primary);
-            background: rgba(29, 72, 227, 0.1);
-        }
-
-        /* === ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКОВ В СТИЛЕ НАВИГАЦИИ === */
-        .language-switcher {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            z-index: 1002;
+        .modal-content {
             background: var(--bg-glass);
-            backdrop-filter: blur(25px) saturate(160%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 25px;
-            padding: 10px 15px;
+            border-radius: 28px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
             box-shadow: 
                 0 8px 25px rgba(0, 0, 0, 0.08),
                 0 0 0 1px rgba(255, 255, 255, 0.5);
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(25px) saturate(160%);
+            -webkit-backdrop-filter: blur(25px) saturate(160%);
         }
 
-        .language-switcher:hover {
-            background: var(--bg-glass-hover);
-            backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(200%);
-            box-shadow: 
-                0 12px 35px rgba(0, 0, 0, 0.12),
-                0 0 0 1px rgba(255, 255, 255, 0.8),
-                0 0 20px rgba(29, 72, 227, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .lang-buttons {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        .lang-btn {
-            background: transparent;
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
             border: none;
-            color: var(--text-secondary);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 1.5rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
+            color: var(--text-light);
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .lang-btn:hover {
-            color: var(--text-primary);
-            background: rgba(0, 0, 0, 0.05);
+        .modal-close:hover {
+            color: var(--primary);
+            background: rgba(255, 215, 0, 0.15);
         }
 
-        .lang-btn.active {
-            color: var(--text-primary);
-            background: rgba(29, 72, 227, 0.1);
-        }
-
-        /* === ЗАГОЛОВКИ СЕКЦИЙ === */
-        .section-title {
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
             text-align: center;
-            font-size: clamp(1.5rem, 4vw, 2rem);
-            font-weight: 800;
-            margin-bottom: 15px;
-            line-height: 1.2;
+            color: var(--text);
         }
 
-        .section-subtitle {
-            text-align: center;
-            color: var(--text-secondary);
-            max-width: 700px;
-            margin: 0 auto 30px;
-            line-height: 1.5;
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
         }
 
-        /* === АДАПТИВНОСТЬ === */
-        @media (max-width: 768px) {
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .glass-btn {
-                width: 100%;
-                max-width: 250px;
-                justify-content: center;
-            }
-            
-            .floating-nav {
-                bottom: 10px;
-                padding: 8px 12px;
-            }
-            
-            .nav-links {
-                gap: 3px;
-            }
-            
-            .nav-link {
-                padding: 6px 10px;
-                font-size: 0.75rem;
-            }
-            
-            .pricing-tabs {
-                gap: 8px;
-            }
-            
-            .pricing-tab {
-                padding: 10px 15px;
-                font-size: 0.8rem;
-            }
-            
-            .services-grid, .features-grid, .testimonials-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .language-switcher {
-                top: 10px;
-                right: 10px;
-                padding: 8px 12px;
-            }
-            
-            .logo-header {
-                top: 10px;
-                left: 10px;
-                padding: 8px 16px;
-            }
-            
-            .logo-text {
-                font-size: 1rem;
-            }
-        }
-
-        /* Улучшение отображения на очень маленьких экранах */
-        @media (max-width: 480px) {
-            .section {
-                padding: 60px 10px;
-            }
-            
-            .container {
-                padding: 0 10px;
-            }
-            
-            .service-card, .feature-card, .testimonial-card {
-                padding: 20px 15px;
-            }
-            
-            .form-container {
-                padding: 20px 15px;
-            }
-            
-            .location-card {
-                padding: 20px 15px;
-            }
-            
-            .nav-link {
-                padding: 5px 8px;
-                font-size: 0.7rem;
-            }
-            
-            .floating-nav {
-                padding: 6px 10px;
-            }
-            
-            .lang-btn {
-                padding: 5px 8px;
-                font-size: 0.7rem;
-            }
-            
-            .language-switcher {
-                padding: 6px 10px;
-            }
-        }
-
-        /* Улучшение отображения на очень больших экранах */
-        @media (min-width: 1400px) {
-            .container {
-                max-width: 1300px;
-            }
+        .modal-actions .btn {
+            flex: 1;
         }
     </style>
 </head>
 <body>
-    <!-- Анимации скролла -->
-    <div class="scroll-animations">
-        <div class="light-trail"></div>
-        <div class="light-trail"></div>
-        <div class="light-trail"></div>
+    <!-- Статический фон -->
+    <div class="static-background"></div>
+
+    <!-- Fixed Header -->
+    <div class="fixed-header">
+        <h1>Бронирование душа</h1>
     </div>
 
-    <!-- Логотип в верхнем левом углу -->
-    <div class="logo-header">
-        <div class="logo-text">MyLingvo</div>
+    <!-- Fixed Admin Button -->
+    <div class="fixed-admin-btn">
+        <button class="btn btn-secondary" onclick="showAdminPanel()" title="Админ панель">
+            <i></i> Админ
+        </button>
     </div>
 
-    <!-- Анимация северного сияния при загрузке -->
-    <div class="aurora-animation" id="auroraAnimation">
-        <div class="aurora-container">
-            <div class="aurora-layer"></div>
-            <div class="aurora-layer"></div>
-            <div class="aurora-layer"></div>
-        </div>
-        <div class="aurora-content">
-            <div class="aurora-logo">MyLingvo.by</div>
-            <div class="aurora-subtitle">Профессиональный перевод документов</div>
-        </div>
-    </div>
+    <div class="container">
+        <!-- Main Content -->
+        <div class="main-grid">
+            <!-- Booking Form -->
+            <div class="card">
+                <h2><i></i> Бронь</h2>
+                
+                <div class="form-group">
+                    <label for="userName">Ваше имя</label>
+                    <input type="text" id="userName" class="input-field" placeholder="Введите ваше имя" required>
+                </div>
 
-    <!-- Переключатель языков -->
-    <div class="language-switcher">
-        <div class="lang-buttons">
-            <button class="lang-btn active" data-lang="ru">Ru</button>
-            <button class="lang-btn" data-lang="en">Eng</button>
-            <button class="lang-btn" data-lang="tk">Tkm</button>
-            <button class="lang-btn" data-lang="zh">Cn</button>
-        </div>
-    </div>
-
-    <!-- Плавающая навигация -->
-    <nav class="floating-nav">
-        <div class="nav-links">
-            <a href="#services" class="nav-link active" data-ru="Услуги" data-en="Services" data-tk="Hyzmatlar" data-zh="服务">Услуги</a>
-            <a href="#pricing" class="nav-link" data-ru="Прайс" data-en="Pricing" data-tk="Bahalar" data-zh="价格">Прайс</a>
-            <a href="#about" class="nav-link" data-ru="О нас" data-en="About" data-tk="Biz barada" data-zh="关于我们">О нас</a>
-            <a href="#why-us" class="nav-link" data-ru="Почему мы" data-en="Why Us" data-tk="Näme üçin biz" data-zh="为什么选择我们">Почему мы</a>
-            <a href="#reviews" class="nav-link" data-ru="Отзывы" data-en="Reviews" data-tk="Synlar" data-zh="评价">Отзывы</a>
-            <a href="#form" class="nav-link" data-ru="Заявка" data-en="Request" data-tk="Haýyş" data-zh="申请">Заявка</a>
-        </div>
-    </nav>
-
-    <!-- Hero секция -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title" data-ru="Профессиональный перевод документов в Минске" data-en="Professional Document Translation in Minsk" data-tk="Minskde hünärli resminama terjimesi" data-zh="明斯克专业文件翻译">Профессиональный перевод документов в Минске</h1>
-            <p class="hero-subtitle" data-ru="Бюро переводов MyLingvo.by — качественные переводы с нотариальным заверением. Работаем с 35+ языками, включая редкие." data-en="MyLingvo.by Translation Agency — quality translations with notarization. We work with 35+ languages, including rare ones." data-tk="MyLingvo.by terjime edarasy — notarial tassyklamaly hili terjimeler. 35+ dil bilen işleýäris, az duş gelýän diller hem." data-zh="MyLingvo.by翻译机构 — 带公证的优质翻译。我们处理35+种语言，包括稀有语言。">Бюро переводов MyLingvo.by — качественные переводы с нотариальным заверением. Работаем с 35+ языками, включая редкие.</p>
-            <div class="hero-buttons">
-                <a href="#form" class="glass-btn glass-btn--primary">
-                    <i class="fas fa-paper-plane"></i> <span data-ru="Оставить заявку" data-en="Submit Request" data-tk="Haýyş iber" data-zh="提交申请">Оставить заявку</span>
-                </a>
-                <a href="#pricing" class="glass-btn">
-                    <i class="fas fa-tag"></i> <span data-ru="Прайс-лист" data-en="Price List" data-tk="Baha sanawy" data-zh="价格表">Прайс-лист</span>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Секция услуг -->
-    <section class="section" id="services">
-        <div class="container">
-            <h2 class="section-title" data-ru="Наши услуги" data-en="Our Services" data-tk="Bizim hyzmatlar" data-zh="我们的服务">Наши услуги</h2>
-            <p class="section-subtitle" data-ru="Профессиональный перевод документов, договоров, сайтов и текстов любой сложности с нотариальным заверением" data-en="Professional translation of documents, contracts, websites and texts of any complexity with notarization" data-tk="Hünärli resminama, şertnama, web sahypa we islendik kynlykdaky tekstleriň terjimesi notarial tassyklama bilen" data-zh="专业翻译文件、合同、网站和任何复杂度的文本，带公证">Профессиональный перевод документов, договоров, сайтов и текстов любой сложности с нотариальным заверением</p>
-            
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-card__icon">
-                        <i class="fas fa-file-alt"></i>
-                    </div>
-                    <h3 class="service-card__title" data-ru="Перевод документов" data-en="Document Translation" data-tk="Resminama terjimesi" data-zh="文件翻译">Перевод документов</h3>
-                    <p class="service-card__description" data-ru="Перевод личных, юридических и технических документов любой сложности" data-en="Translation of personal, legal and technical documents of any complexity" data-tk="Şahsy, hukuk we tehniki resminamalaryň islendik kynlykdaky terjimesi" data-zh="翻译个人、法律和技术文件，任何复杂度">Перевод личных, юридических и технических документов любой сложности</p>
-                </div>
-                
-                <div class="service-card">
-                    <div class="service-card__icon">
-                        <i class="fas fa-stamp"></i>
-                    </div>
-                    <h3 class="service-card__title" data-ru="Нотариальное заверение" data-en="Notarization" data-tk="Notarial tassyklama" data-zh="公证">Нотариальное заверение</h3>
-                    <p class="service-card__description" data-ru="Официальное заверение переводов у нотариуса для предоставления в государственные органы" data-en="Official notarization of translations for submission to government agencies" data-tk="Döwlet edaralaryna tabşyrmak üçin terjimeleriň resmi notarial tassyklamasy" data-zh="官方翻译公证，用于提交给政府机构">Официальное заверение переводов у нотариуса для предоставления в государственные органы</p>
-                </div>
-                
-                <div class="service-card">
-                    <div class="service-card__icon">
-                        <i class="fas fa-globe"></i>
-                    </div>
-                    <h3 class="service-card__title" data-ru="Перевод сайтов" data-en="Website Translation" data-tk="Web sahypa terjimesi" data-zh="网站翻译">Перевод сайтов</h3>
-                    <p class="service-card__description" data-ru="Локализация веб-сайтов и онлайн-контента для международной аудитории" data-en="Localization of websites and online content for international audience" data-tk="Halkara tomaşaçylar üçin web sahypalaryň we onlaýn mazmunyň lokalizasiýasy" data-zh="为国际受众本地化网站和在线内容">Локализация веб-сайтов и онлайн-контента для международной аудитории</p>
-                </div>
-                
-                <div class="service-card">
-                    <div class="service-card__icon">
-                        <i class="fas fa-language"></i>
-                    </div>
-                    <h3 class="service-card__title" data-ru="Редкие языки" data-en="Rare Languages" data-tk="Az duş gelýän diller" data-zh="稀有语言">Редкие языки</h3>
-                    <p class="service-card__description" data-ru="Перевод с редких языков: азербайджанский, таджикский, туркменский, персидский и другие" data-en="Translation from rare languages: Azerbaijani, Tajik, Turkmen, Persian and others" data-tk="Az duş gelýän dillerden terjime: Azerbaýjan, Täjik, Türkmen, Pars we beýlekiler" data-zh="从稀有语言翻译：阿塞拜疆语、塔吉克语、土库曼语、波斯语等">Перевод с редких языков: азербайджанский, таджикский, туркменский, персидский и другие</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Секция прайс-листа -->
-    <section class="section pricing-section" id="pricing">
-        <div class="container">
-            <h2 class="section-title" data-ru="Прайс-лист" data-en="Price List" data-tk="Baha sanawy" data-zh="价格表">Прайс-лист</h2>
-            <p class="section-subtitle" data-ru="Стоимость переводов с нотариальным заверением и без. Акции действуют до 31 декабря 2025 года" data-en="Cost of translations with and without notarization. Promotions valid until December 31, 2025" data-tk="Notarial tassyklama bilen we onsuz terjimeleriň bahasy. Aksiýalar 2025-nji ýylyň 31-nji dekabryna çenli" data-zh="带公证和不带公证的翻译费用。促销活动有效期至2025年12月31日">Стоимость переводов с нотариальным заверением и без. Акции действуют до 31 декабря 2025 года</p>
-            
-            <div class="pricing-tabs">
-                <div class="pricing-tab active" data-tab="english" data-ru="Английский" data-en="English" data-tk="Iňlis" data-zh="英语">Английский</div>
-                <div class="pricing-tab" data-tab="german" data-ru="Немецкий" data-en="German" data-tk="Nemes" data-zh="德语">Немецкий</div>
-                <div class="pricing-tab" data-tab="french" data-ru="Французский" data-en="French" data-tk="Fransuz" data-zh="法语">Французский</div>
-                <div class="pricing-tab" data-tab="polish" data-ru="Польский" data-en="Polish" data-tk="Polýak" data-zh="波兰语">Польский</div>
-                <div class="pricing-tab" data-tab="azerbaijani" data-ru="Азербайджанский" data-en="Azerbaijani" data-tk="Azerbaýjan" data-zh="阿塞拜疆语">Азербайджанский</div>
-                <div class="pricing-tab" data-tab="tajik" data-ru="Таджикский" data-en="Tajik" data-tk="Täjik" data-zh="塔吉克语">Таджикский</div>
-                <div class="pricing-tab" data-tab="arabic" data-ru="Арабский" data-en="Arabic" data-tk="Arap" data-zh="阿拉伯语">Арабский</div>
-                <div class="pricing-tab" data-tab="turkmen" data-ru="Туркменский" data-en="Turkmen" data-tk="Türkmen" data-zh="土库曼语">Туркменский</div>
-                <div class="pricing-tab" data-tab="persian" data-ru="Персидский" data-en="Persian" data-tk="Pars" data-zh="波斯语">Персидский</div>
-                <div class="pricing-tab" data-tab="uzbek" data-ru="Узбекский" data-en="Uzbek" data-tk="Özbek" data-zh="乌兹别克语">Узбекский</div>
-            </div>
-            
-            <div class="pricing-content active" id="english">
-                <h3 data-ru="Английский язык" data-en="English" data-tk="Iňlis dili" data-zh="英语">Английский язык</h3>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод без нотариального заверения" data-en="Translation without notarization" data-tk="Notarial tassyklamasyz terjime" data-zh="不带公证的翻译">Перевод без нотариального заверения</span>
-                    <span class="pricing-item__price">от 17 BYN</span>
-                </div>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод с нотариальным заверением" data-en="Translation with notarization" data-tk="Notarial tassyklamaly terjime" data-zh="带公证的翻译">Перевод с нотариальным заверением</span>
-                    <span class="pricing-item__price">от 57 BYN</span>
-                </div>
-                <div class="service-card__badge" data-ru="Акция до 31.12.2025" data-en="Promotion until 12/31/2025" data-tk="Aksiýa 31.12.2025 çenli" data-zh="促销至2025年12月31日">Акция до 31.12.2025</div>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод с нотариальным заверением (акция)" data-en="Translation with notarization (promotion)" data-tk="Notarial tassyklamaly terjime (aksiýa)" data-zh="带公证的翻译（促销）">Перевод с нотариальным заверением (акция)</span>
-                    <span class="pricing-item__price">50 BYN</span>
-                </div>
-            </div>
-            
-            <!-- Остальные вкладки прайс-листа -->
-            <div class="pricing-content" id="german">
-                <h3 data-ru="Немецкий язык" data-en="German" data-tk="Nemes dili" data-zh="德语">Немецкий язык</h3>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод без нотариального заверения" data-en="Translation without notarization" data-tk="Notarial tassyklamasyz terjime" data-zh="不带公证的翻译">Перевод без нотариального заверения</span>
-                    <span class="pricing-item__price">от 17 BYN</span>
-                </div>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод с нотариальным заверением" data-en="Translation with notarization" data-tk="Notarial tassyklamaly terjime" data-zh="带公证的翻译">Перевод с нотариальным заверением</span>
-                    <span class="pricing-item__price">от 57 BYN</span>
-                </div>
-            </div>
-            
-            <div class="pricing-content" id="french">
-                <h3 data-ru="Французский язык" data-en="French" data-tk="Fransuz dili" data-zh="法语">Французский язык</h3>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод без нотариального заверения" data-en="Translation without notarization" data-tk="Notarial tassyklamasyz terjime" data-zh="不带公证的翻译">Перевод без нотариального заверения</span>
-                    <span class="pricing-item__price">от 23 BYN</span>
-                </div>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод с нотариальным заверением" data-en="Translation with notarization" data-tk="Notarial tassyklamaly terjime" data-zh="带公证的翻译">Перевод с нотариальным заверением</span>
-                    <span class="pricing-item__price">от 63 BYN</span>
-                </div>
-            </div>
-            
-            <div class="pricing-content" id="polish">
-                <h3 data-ru="Польский язык" data-en="Polish" data-tk="Polýak dili" data-zh="波兰语">Польский язык</h3>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод без нотариального заверения" data-en="Translation without notarization" data-tk="Notarial tassyklamasyz terjime" data-zh="不带公证的翻译">Перевод без нотариального заверения</span>
-                    <span class="pricing-item__price">от 25 BYN</span>
-                </div>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод с нотариальным заверением" data-en="Translation with notarization" data-tk="Notarial tassyklamaly terjime" data-zh="带公证的翻译">Перевод с нотариальным заверением</span>
-                    <span class="pricing-item__price">от 65 BYN</span>
-                </div>
-            </div>
-            
-            <div class="pricing-content" id="azerbaijani">
-                <h3 data-ru="Азербайджанский язык" data-en="Azerbaijani" data-tk="Azerbaýjan dili" data-zh="阿塞拜疆语">Азербайджанский язык</h3>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод без нотариального заверения" data-en="Translation without notarization" data-tk="Notarial tassyklamasyz terjime" data-zh="不带公证的翻译">Перевод без нотариального заверения</span>
-                    <span class="pricing-item__price">от 30 BYN</span>
-                </div>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод с нотариальным заверением" data-en="Translation with notarization" data-tk="Notarial tassyklamaly terjime" data-zh="带公证的翻译">Перевод с нотариальным заверением</span>
-                    <span class="pricing-item__price">от 70 BYN</span>
-                </div>
-            </div>
-            
-            <div class="pricing-content" id="tajik">
-                <h3 data-ru="Таджикский язык" data-en="Tajik" data-tk="Täjik dili" data-zh="塔吉克语">Таджикский язык</h3>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод без нотариального заверения" data-en="Translation without notarization" data-tk="Notarial tassyklamasyz terjime" data-zh="不带公证的翻译">Перевод без нотариального заверения</span>
-                    <span class="pricing-item__price">от 40 BYN</span>
-                </div>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод с нотариальным заверением" data-en="Translation with notarization" data-tk="Notarial tassyklamaly terjime" data-zh="带公证的翻译">Перевод с нотариальным заверением</span>
-                    <span class="pricing-item__price">от 80 BYN</span>
-                </div>
-            </div>
-            
-            <div class="pricing-content" id="arabic">
-                <h3 data-ru="Арабский язык" data-en="Arabic" data-tk="Arap dili" data-zh="阿拉伯语">Арабский язык</h3>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод без нотариального заверения" data-en="Translation without notarization" data-tk="Notarial tassyklamasyz terjime" data-zh="不带公证的翻译">Перевод без нотариального заверения</span>
-                    <span class="pricing-item__price">от 45 BYN</span>
-                </div>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод с нотариальным заверением" data-en="Translation with notarization" data-tk="Notarial tassyklamaly terjime" data-zh="带公证的翻译">Перевод с нотариальным заверением</span>
-                    <span class="pricing-item__price">от 85 BYN</span>
-                </div>
-            </div>
-            
-            <div class="pricing-content" id="turkmen">
-                <h3 data-ru="Туркменский язык" data-en="Turkmen" data-tk="Türkmen dili" data-zh="土库曼语">Туркменский язык</h3>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод без нотариального заверения" data-en="Translation without notarization" data-tk="Notarial tassyklamasyz terjime" data-zh="不带公证的翻译">Перевод без нотариального заверения</span>
-                    <span class="pricing-item__price">от 20 BYN</span>
-                </div>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод с нотариальным заверением" data-en="Translation with notarization" data-tk="Notarial tassyklamaly terjime" data-zh="带公证的翻译">Перевод с нотариальным заверением</span>
-                    <span class="pricing-item__price">от 60 BYN</span>
-                </div>
-                <div class="service-card__badge" data-ru="Акция до 31.12.2025" data-en="Promotion until 12/31/2025" data-tk="Aksiýa 31.12.2025 çenli" data-zh="促销至2025年12月31日">Акция до 31.12.2025</div>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод с нотариальным заверением (акция)" data-en="Translation with notarization (promotion)" data-tk="Notarial tassyklamaly terjime (aksiýa)" data-zh="带公证的翻译（促销）">Перевод с нотариальным заверением (акция)</span>
-                    <span class="pricing-item__price">50 BYN</span>
-                </div>
-            </div>
-            
-            <div class="pricing-content" id="persian">
-                <h3 data-ru="Персидский язык" data-en="Persian" data-tk="Pars dili" data-zh="波斯语">Персидский язык</h3>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод без нотариального заверения" data-en="Translation without notarization" data-tk="Notarial tassyklamasyz terjime" data-zh="不带公证的翻译">Перевод без нотариального заверения</span>
-                    <span class="pricing-item__price">от 45 BYN</span>
-                </div>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод с нотариальным заверением" data-en="Translation with notarization" data-tk="Notarial tassyklamaly terjime" data-zh="带公证的翻译">Перевод с нотариальным заверением</span>
-                    <span class="pricing-item__price">от 85 BYN</span>
-                </div>
-            </div>
-            
-            <div class="pricing-content" id="uzbek">
-                <h3 data-ru="Узбекский язык" data-en="Uzbek" data-tk="Özbek dili" data-zh="乌兹别克语">Узбекский язык</h3>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод без нотариального заверения" data-en="Translation without notarization" data-tk="Notarial tassyklamasyz terjime" data-zh="不带公证的翻译">Перевод без нотариального заверения</span>
-                    <span class="pricing-item__price">от 25 BYN</span>
-                </div>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод с нотариальным заверением" data-en="Translation with notarization" data-tk="Notarial tassyklamaly terjime" data-zh="带公证的翻译">Перевод с нотариальным заверением</span>
-                    <span class="pricing-item__price">от 65 BYN</span>
-                </div>
-                <div class="service-card__badge" data-ru="Акция до 31.12.2025" data-en="Promotion until 12/31/2025" data-tk="Aksiýa 31.12.2025 çenli" data-zh="促销至2025年12月31日">Акция до 31.12.2025</div>
-                <div class="pricing-item">
-                    <span class="pricing-item__service" data-ru="Перевод с нотариальным заверением (акция)" data-en="Translation with notarization (promotion)" data-tk="Notarial tassyklamaly terjime (aksiýa)" data-zh="带公证的翻译（促销）">Перевод с нотариальным заверением (акция)</span>
-                    <span class="pricing-item__price">65 BYN</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Секция "О нас" -->
-    <section class="section about-section" id="about">
-        <div class="container">
-            <h2 class="section-title" data-ru="О нас" data-en="About Us" data-tk="Biz barada" data-zh="关于我们">О нас</h2>
-            <div class="about-content">
-                <p class="about-text" data-ru="Команда MyLingvo славится своей клиентоориентированностью и обеспечивает быстрый и профессиональный перевод в любой области. Не секрет, что наш опыт и профессионализм основаны на многолетней практике работы с иностранными студентами и образовательными учреждениями." data-en="The MyLingvo team is known for its customer focus and provides fast and professional translation in any field. It's no secret that our experience and professionalism are based on years of practice working with foreign students and educational institutions." data-tk="MyLingvo topary müşderi merkezli häsiýeti bilen meşhur we islendik pudakda çalt we hünärli terjime üpjün edýär. Bizim tejribe we hünärliligiň daşary ýurt studentleri we bilim edaralary bilen işleýän köp ýyllyk tejribämize esaslanýandygynyň syry däl." data-zh="MyLingvo团队以其以客户为中心而闻名，并在任何领域提供快速专业的翻译。我们的经验和专业性基于多年来与外国学生和教育机构合作的实践，这已不是秘密。">Команда MyLingvo славится своей клиентоориентированностью и обеспечивает быстрый и профессиональный перевод в любой области. Не секрет, что наш опыт и профессионализм основаны на многолетней практике работы с иностранными студентами и образовательными учреждениями.</p>
-                
-                <p class="about-text" data-ru="Не важно, планируете вы поступить в университет в другой стране, или просто переехать, или вы ведете бизнес с иностранными партнерами — мы поможем решить все ваши вопросы в сфере перевода!" data-en="No matter if you plan to enter a university in another country, just move, or do business with foreign partners - we will help solve all your translation issues!" data-tk="Başga bir ýurtdaky uniwersitete girmek meýilnamasyňyz, diňe köçmek ýa-da daşary ýurt hyzmatdaşlary bilen iş etmegiňiz möhüm däl — terjime pudagyndaky ähli meseleleriňizi çözmäge kömek ederis!" data-zh="无论您计划进入另一个国家的大学，只是搬家，还是与外国合作伙伴做生意 - 我们都将帮助解决您在翻译领域的所有问题！">Не важно, планируете вы поступить в университет в другой стране, или просто переехать, или вы ведете бизнес с иностранными партнерами — мы поможем решить все ваши вопросы в сфере перевода!</p>
-                
-                <p class="about-text" data-ru="Мы понимаем, что для успешного сотрудничества важно не только качество работы, но и доверие. Поэтому мы стремимся сделать каждый этап взаимодействия максимально прозрачным и удобным для вас." data-en="We understand that for successful cooperation, not only the quality of work is important, but also trust. Therefore, we strive to make every stage of interaction as transparent and convenient as possible for you." data-tk="Üstünlikli hyzmatdaşlyk üçin diňe işiň hili däl, eýsem ynançyň hem möhümdigini düşünýäris. Şonuň üçin her bir gatnaşyk basgançagyny size iň şaffaf we amatly etmäge çalşýarys." data-zh="我们理解，对于成功的合作，不仅工作质量重要，信任也很重要。因此，我们努力使互动的每个阶段对您来说尽可能透明和方便。">Мы понимаем, что для успешного сотрудничества важно не только качество работы, но и доверие. Поэтому мы стремимся сделать каждый этап взаимодействия максимально прозрачным и удобным для вас.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Секция "Почему именно мы" -->
-    <section class="section why-us-section" id="why-us">
-        <div class="container">
-            <h2 class="section-title" data-ru="Почему именно мы" data-en="Why Choose Us" data-tk="Näme üçin bizi saýlaýarlar" data-zh="为什么选择我们">Почему именно мы</h2>
-            <p class="section-subtitle" data-ru="Наши преимущества, которые делают нас лучшими в сфере переводов" data-en="Our advantages that make us the best in the translation field" data-tk="Bizi terjime pudagynda iň gowusy eden üstünliklerimiz" data-zh="我们的优势使我们成为翻译领域的最佳选择">Наши преимущества, которые делают нас лучшими в сфере переводов</p>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-card__icon">
-                        <i class="fas fa-check-double"></i>
-                    </div>
-                    <h3 class="feature-card__title" data-ru="Многоуровневая проверка и редактирование" data-en="Multi-level verification and editing" data-tk="Köp derejeli barlag we redaktirleme" data-zh="多级验证和编辑">Многоуровневая проверка и редактирование</h3>
-                    <p class="feature-card__description" data-ru="Каждый перевод проходит несколько этапов проверки для обеспечения высочайшего качества" data-en="Each translation goes through several verification stages to ensure the highest quality" data-tk="Her terjime iň ýokary hili üpjün etmek üçin birnäçe barlag basgançagyny geçýär" data-zh="每次翻译都经过多个验证阶段以确保最高质量">Каждый перевод проходит несколько этапов проверки для обеспечения высочайшего качества</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-card__icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <h3 class="feature-card__title" data-ru="Соблюдение сроков — 8 из 10 переводов завершаем раньше" data-en="Meeting deadlines — 8 out of 10 translations completed early" data-tk="Möhletlere eýerilmegi — 10 terjimäniň 8-i ir tamamlanýar" data-zh="遵守截止日期 — 10个翻译中有8个提前完成">Соблюдение сроков — 8 из 10 переводов завершаем раньше</h3>
-                    <p class="feature-card__description" data-ru="Мы ценим ваше время и всегда стараемся выполнить работу раньше установленного срока" data-en="We value your time and always strive to complete work ahead of schedule" data-tk="Siziň wagtyňyzy gymmatlandyrýarys we işi kesgitlenen möhletden ir tamamlamaga çalşýarys" data-zh="我们珍惜您的时间，始终努力提前完成工作">Мы ценим ваше время и всегда стараемся выполнить работу раньше установленного срока</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-card__icon">
-                        <i class="fas fa-user-tie"></i>
-                    </div>
-                    <h3 class="feature-card__title" data-ru="Индивидуальный подход — персональный менеджер" data-en="Individual approach — personal manager" data-tk="Şahsy ýanaşma — şahsy menedžer" data-zh="个性化方法 — 个人经理">Индивидуальный подход — персональный менеджер</h3>
-                    <p class="feature-card__description" data-ru="Каждый клиент получает персонального менеджера, который сопровождает проект от начала до конца" data-en="Each client receives a personal manager who accompanies the project from start to finish" data-tk="Her müşderi taslamany başyndan ahyryna çenli goldaýan şahsy menedžer alyar" data-zh="每位客户都会获得一位从始至终陪伴项目的个人经理">Каждый клиент получает персонального менеджера, который сопровождает проект от начала до конца</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-card__icon">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <h3 class="feature-card__title" data-ru="100% конфиденциальность" data-en="100% confidentiality" data-tk="100% gizlinlik" data-zh="100%保密性">100% конфиденциальность</h3>
-                    <p class="feature-card__description" data-ru="Мы гарантируем полную конфиденциальность ваших документов и личной информации" data-en="We guarantee complete confidentiality of your documents and personal information" data-tk="Resminamalaryňyzyň we şahsy maglumatlaryňyzyň doly gizlinligini üpjün edýäris" data-zh="我们保证您的文件和个人信息的完全保密性">Мы гарантируем полную конфиденциальность ваших документов и личной информации</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-card__icon">
-                        <i class="fas fa-shipping-fast"></i>
-                    </div>
-                    <h3 class="feature-card__title" data-ru="Отправляем почтой, курьером или по email" data-en="We send by mail, courier or email" data-tk="Poçta, kurer ýa-da e-mail arkaly iberýäris" data-zh="我们通过邮件、快递或电子邮件发送">Отправляем почтой, курьером или по email</h3>
-                    <p class="feature-card__description" data-ru="Удобные способы доставки готовых переводов в любую точку мира" data-en="Convenient ways to deliver finished translations anywhere in the world" data-tk="Taýyn terjimeleri dünýäniň islendik nokadyna ibermegiň amatly usullary" data-zh="将完成的翻译交付到世界任何地方的便捷方式">Удобные способы доставки готовых переводов в любую точку мира</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-card__icon">
-                        <i class="fas fa-credit-card"></i>
-                    </div>
-                    <h3 class="feature-card__title" data-ru="Удобные способы оплаты" data-en="Convenient payment methods" data-tk="Amatly töleg usullary" data-zh="便捷的支付方式">Удобные способы оплаты</h3>
-                    <p class="feature-card__description" data-ru="Различные варианты оплаты, включая онлайн-платежи, банковские переводы и наличные" data-en="Various payment options including online payments, bank transfers and cash" data-tk="Onlaýn tölegler, bank geçirimleri we nagt pul ýaly dürli töleg wariantlary" data-zh="各种支付选项，包括在线支付、银行转账和现金">Различные варианты оплаты, включая онлайн-платежи, банковские переводы и наличные</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Секция отзывов -->
-    <section class="section" id="reviews">
-        <div class="container">
-            <h2 class="section-title" data-ru="Отзывы наших клиентов" data-en="Our Customer Reviews" data-tk="Müşderilerimiziň synlary" data-zh="我们的客户评价">Отзывы наших клиентов</h2>
-            <p class="section-subtitle" data-ru="Что говорят о нас клиенты на Яндекс.Картах" data-en="What customers say about us on Yandex.Maps" data-tk="Müşderiler biziň barada Yandex.Kartlarda näme diýýärler" data-zh="客户在Yandex地图上对我们的评价">Что говорят о нас клиенты на Яндекс.Картах</p>
-            
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <p class="testimonial-text" data-ru="Обращалась для перевода документов для визы. Сделали все быстро, качественно и недорого. Персонал вежливый и отзывчивый. Рекомендую!" data-en="I applied for translation of documents for a visa. They did everything quickly, quality and inexpensively. The staff is polite and responsive. I recommend!" data-tk="Wiza üçin resminamalary terjime etmek üçin ýüz tutdum. Ähli zady çalt, hili we arzan ýerine ýetirdiler. Işgärler edepli we jogap berijilikli. Maslahat berýärin!" data-zh="我申请了签证文件翻译。他们做得快速、优质且价格合理。员工礼貌且反应迅速。我推荐！">Обращалась для перевода документов для визы. Сделали все быстро, качественно и недорого. Персонал вежливый и отзывчивый. Рекомендую!</p>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar">ЕК</div>
-                        <div>
-                            <div style="font-weight: 600;">Екатерина К.</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Яндекс.Карты</div>
+                <div class="form-group">
+                    <label>Пол</label>
+                    <div class="custom-select">
+                        <div class="select-field" id="genderSelect">
+                            -- Выберите пол --
+                        </div>
+                        <div class="custom-dropdown" id="genderDropdown">
+                            <div class="dropdown-option" data-value="male">
+                            Мужской</div>
+                            <div class="dropdown-option" data-value="female">Женский</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="testimonial-card">
-                    <p class="testimonial-text" data-ru="Переводили диплом и приложение к нему. Все сделали в срок, качественно. Цены адекватные. Буду обращаться еще." data-en="Translated diploma and supplement to it. Everything was done on time, quality. Prices are adequate. I will apply again." data-tk="Diplom we ona goşmaça terjime edildi. Ähli zat wagtunda, hili ýerine ýetirildi. Bahalar ýeterlik. Ýene-de ýüz tutaryn." data-zh="翻译了文凭及其附件。一切都按时、优质地完成。价格合理。我会再次申请。">Переводили диплом и приложение к нему. Все сделали в срок, качественно. Цены адекватные. Буду обращаться еще.</p>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar">АС</div>
-                        <div>
-                            <div style="font-weight: 600;">Александр С.</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Яндекс.Карты</div>
+                <div class="form-group">
+                    <label>на сколько ключей</label>
+                    <div class="custom-select">
+                        <div class="select-field" id="slotsSelect">
+                             Один ключь
+                        </div>
+                        <div class="custom-dropdown" id="slotsDropdown">
+                            <div class="dropdown-option" data-value="1">1 Один ключь </div>
+                            <div class="dropdown-option" data-value="2">🚿🚿2 Два ключа </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="testimonial-card">
-                    <p class="testimonial-text" data-ru="Нужен был срочный перевод паспорта. Сделали за 2 часа! Очень выручили. Теперь знаю, куда обращаться за переводами." data-en="I needed an urgent passport translation. Done in 2 hours! Really helped out. Now I know where to go for translations." data-tk="Çalt pasport terjimesi gerekdi. 2 sagatda ýerine ýetirildi! Hakykatdanam ýardam etdi. Indi terjimeler üçin nirä ýüz tutmalydygyny bilýärin." data-zh="我需要紧急护照翻译。2小时内完成！真的帮了大忙。现在我知道去哪里做翻译了。">Нужен был срочный перевод паспорта. Сделали за 2 часа! Очень выручили. Теперь знаю, куда обращаться за переводами.</p>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar">МЛ</div>
-                        <div>
-                            <div style="font-weight: 600;">Мария Л.</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Яндекс.Карты</div>
+                <div class="form-group">
+                    <label>Время бронирования</label>
+                    <div class="time-select">
+                        <div class="custom-select">
+                            <div class="select-field" id="hoursSelect">
+                                12
+                            </div>
+                            <div class="custom-dropdown" id="hoursDropdown">
+                                <!-- Часы будут добавлены через JS -->
+                            </div>
                         </div>
+                        <div class="time-separator">:</div>
+                        <div class="custom-select">
+                            <div class="select-field" id="minutesSelect">
+                                00
+                            </div>
+                            <div class="custom-dropdown" id="minutesDropdown">
+                                <!-- Минуты будут добавлены через JS -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="duration-select">
+                        <label style="font-size: 0.9rem; color: var(--text-light);">Длительность (минут)</label>
+                        <div class="custom-select">
+                            <div class="select-field" id="durationSelect">
+                                30 минут
+                            </div>
+                            <div class="custom-dropdown" id="durationDropdown">
+                                <!-- Длительность от 1 до 30 будет добавлена через JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="bookSlot()">
+                    <i>✅</i> Забронировать душ
+                </button>
+
+                <div id="message"></div>
+            </div>
+
+            <!-- Current Bookings -->
+            <div class="card">
+                <h2><i>📋</i> Текущие брони</h2>
+                <div id="currentBookings">
+                    <div id="bookingsList" class="booking-list">
+                        <!-- Bookings will appear here -->
                     </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Секция формы -->
-    <section class="section form-section" id="form">
-        <div class="container">
-            <h2 class="section-title" data-ru="Оставить заявку" data-en="Submit Request" data-tk="Haýyş iber" data-zh="提交申请">Оставить заявку</h2>
-            <p class="section-subtitle" data-ru="Заполните форму, и мы свяжемся с вами в ближайшее время для уточнения деталей" data-en="Fill out the form and we will contact you shortly to clarify details" data-tk="Formany dolduryň we jikme-jik maglumatlar üçin siziň bilen gysga wagtyň içinde habarlaşarys" data-zh="填写表格，我们将很快与您联系以澄清细节">Заполните форму, и мы свяжемся с вами в ближайшее время для уточнения деталей</p>
-            
-            <div class="form-container">
-                <form id="orderForm">
-                    <div class="form-group">
-                        <label class="form-label" for="name" data-ru="Имя *" data-en="Name *" data-tk="Ady *" data-zh="姓名 *">Имя *</label>
-                        <input type="text" id="name" class="form-input" placeholder data-ru="Ваше имя" data-en="Your name" data-tk="Adyňyz" data-zh="您的姓名" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="phone" data-ru="Телефон *" data-en="Phone *" data-tk="Telefon *" data-zh="电话 *">Телефон *</label>
-                        <input type="tel" id="phone" class="form-input" placeholder data-ru="+375 (XX) XXX-XX-XX" data-en="+1 (XXX) XXX-XXXX" data-tk="+993 (XX) XX-XX-XX" data-zh="+86 XXXXXXXXX" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="language" data-ru="Язык перевода" data-en="Translation Language" data-tk="Terjime dili" data-zh="翻译语言">Язык перевода</label>
-                        <select id="language" class="form-select">
-                            <option value="" data-ru="Выберите язык" data-en="Select language" data-tk="Dili saýlaň" data-zh="选择语言">Выберите язык</option>
-                            <option value="english" data-ru="Английский" data-en="English" data-tk="Iňlis" data-zh="英语">Английский</option>
-                            <option value="german" data-ru="Немецкий" data-en="German" data-tk="Nemes" data-zh="德语">Немецкий</option>
-                            <option value="french" data-ru="Французский" data-en="French" data-tk="Fransuz" data-zh="法语">Французский</option>
-                            <option value="polish" data-ru="Польский" data-en="Polish" data-tk="Polýak" data-zh="波兰语">Польский</option>
-                            <option value="azerbaijani" data-ru="Азербайджанский" data-en="Azerbaijani" data-tk="Azerbaýjan" data-zh="阿塞拜疆语">Азербайджанский</option>
-                            <option value="tajik" data-ru="Таджикский" data-en="Tajik" data-tk="Täjik" data-zh="塔吉克语">Таджикский</option>
-                            <option value="arabic" data-ru="Арабский" data-en="Arabic" data-tk="Arap" data-zh="阿拉伯语">Арабский</option>
-                            <option value="turkmen" data-ru="Туркменский" data-en="Turkmen" data-tk="Türkmen" data-zh="土库曼语">Туркменский</option>
-                            <option value="persian" data-ru="Персидский" data-en="Persian" data-tk="Pars" data-zh="波斯语">Персидский</option>
-                            <option value="uzbek" data-ru="Узбекский" data-en="Uzbek" data-tk="Özbek" data-zh="乌兹别克语">Узбекский</option>
-                            <option value="other" data-ru="Другой язык" data-en="Other language" data-tk="Beýleki dil" data-zh="其他语言">Другой язык</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="message" data-ru="Дополнительная информация" data-en="Additional Information" data-tk="Goşmaça maglumat" data-zh="附加信息">Дополнительная информация</label>
-                        <textarea id="message" class="form-textarea" rows="3" placeholder data-ru="Опишите ваш заказ..." data-en="Describe your order..." data-tk="Sargydyňyzy düşündiriň..." data-zh="描述您的订单..."></textarea>
-                    </div>
-                    
-                    <button type="submit" class="glass-btn glass-btn--primary" style="width: 100%; justify-content: center;">
-                        <i class="fas fa-paper-plane"></i> <span data-ru="Оставить заявку" data-en="Submit Request" data-tk="Haýyş iber" data-zh="提交申请">Оставить заявку</span>
+        <!-- Admin Panel -->
+        <div class="admin-panel hidden" id="adminPanel">
+            <div class="admin-header">
+                <h2><i></i> Панель дежурного</h2>
+                <div class="admin-actions">
+                    <button class="btn btn-danger" onclick="clearAllData()">
+                        <i>🗑️</i> Очистить все брони
                     </button>
-                </form>
+                    <button class="btn btn-secondary" onclick="hideAdminPanel()">
+                        <i>❌</i> Закрыть
+                    </button>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Секция с картой и анимацией Земли -->
-    <section class="map-section" id="map">
-        <div class="earth-animation-container">
-            <canvas id="earthCanvas"></canvas>
-            <div class="earth-fallback" id="earthFallback"></div>
-        </div>
-        <div class="location-card">
-            <h3 data-ru="Наш офис в Минске" data-en="Our Office in Minsk" data-tk="Minskdäki biziň ofisimiz" data-zh="我们在明斯克的办公室">Наш офис в Минске</h3>
-            <p data-ru="Бюро переводов MyLingvo.by" data-en="MyLingvo.by Translation Agency" data-tk="MyLingvo.by terjime edarasy" data-zh="MyLingvo.by翻译机构">Бюро переводов MyLingvo.by</p>
-            <div class="footer-contact">
-                <i class="fas fa-phone-alt"></i>
-                <span>+375 25 700 14 14</span>
+    <!-- Admin Auth Modal -->
+    <div class="modal-overlay" id="adminAuthModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="hideModal('adminAuthModal')">×</button>
+            <h3 class="modal-title">Доступ для дежурного</h3>
+            <div class="form-group">
+                <label for="adminPassword">Пароль</label>
+                <input type="password" id="adminPassword" class="input-field" placeholder="Введите пароль">
             </div>
-            <div class="footer-contact">
-                <i class="fas fa-map-marker-alt"></i>
-                <span data-ru="Минск, ул. Якуба Коласа, 31" data-en="Minsk, Yakuba Kolasa St, 31" data-tk="Minsk, Ýakuba Kolasa köçesi, 31" data-zh="明斯克, 雅库巴科拉萨街, 31号">Минск, ул. Якуба Коласа, 31</span>
-            </div>
-            <div class="footer-contact">
-                <i class="fas fa-clock"></i>
-                <span data-ru="Пн-Пт: 9:00-20:00, Сб-Вс: 10:00-18:00" data-en="Mon-Fri: 9:00-20:00, Sat-Sun: 10:00-18:00" data-tk="Du-An: 9:00-20:00, Şen-Ýek: 10:00-18:00" data-zh="周一至周五: 9:00-20:00, 周六-周日: 10:00-18:00">Пн-Пт: 9:00-20:00, Сб-Вс: 10:00-18:00</span>
-            </div>
-            <div class="hero-buttons" style="margin-top: 20px;">
-                <a href="tel:+375257001414" class="glass-btn glass-btn--primary">
-                    <i class="fas fa-phone"></i> <span data-ru="Позвонить" data-en="Call" data-tk="Jaň et" data-zh="打电话">Позвонить</span>
-                </a>
-                <a href="https://yandex.by/maps/org/mylingvo_by/217258172036/?ll=27.591098%2C53.924267&z=16" class="glass-btn" target="_blank">
-                    <i class="fas fa-map-marker-alt"></i> <span data-ru="Открыть карту" data-en="Open Map" data-tk="Kartany aç" data-zh="打开地图">Открыть карту</span>
-                </a>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="hideModal('adminAuthModal')">Отмена</button>
+                <button class="btn btn-primary" onclick="checkAdminPassword()">Войти</button>
             </div>
         </div>
-    </section>
-
-    <!-- Футер -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>MyLingvo.by</h3>
-                    <ul class="footer-links">
-                        <li><a href="#services" data-ru="Услуги" data-en="Services" data-tk="Hyzmatlar" data-zh="服务">Услуги</a></li>
-                        <li><a href="#pricing" data-ru="Прайс-лист" data-en="Price List" data-tk="Baha sanawy" data-zh="价格表">Прайс-лист</a></li>
-                        <li><a href="#about" data-ru="О компании" data-en="About" data-tk="Kompaniýa barada" data-zh="关于公司">О компании</a></li>
-                        <li><a href="#contact" data-ru="Контакты" data-en="Contact" data-tk="Habarlaşmak" data-zh="联系方式">Контакты</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h3 data-ru="Контакты" data-en="Contacts" data-tk="Habarlaşmak" data-zh="联系方式">Контакты</h3>
-                    <div class="footer-contact">
-                        <i class="fas fa-phone-alt"></i>
-                        <span>+375 25 700 14 14</span>
-                    </div>
-                    <div class="footer-contact">
-                        <i class="fas fa-envelope"></i>
-                        <span>info@mylingvo.by</span>
-                    </div>
-                    <div class="footer-contact">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span data-ru="Минск, ул. Якуба Коласа, 31" data-en="Minsk, Yakuba Kolasa St, 31" data-tk="Minsk, Ýakuba Kolasa köçesi, 31" data-zh="明斯克, 雅库巴科拉萨街, 31号">Минск, ул. Якуба Коласа, 31</span>
-                    </div>
-                </div>
-                
-                <div class="footer-column">
-                    <h3 data-ru="Документы" data-en="Documents" data-tk="Resminamalar" data-zh="文件">Документы</h3>
-                    <ul class="footer-links">
-                        <li><a href="#" data-ru="Политика конфиденциальности" data-en="Privacy Policy" data-tk="Gizlinlik syýasaty" data-zh="隐私政策">Политика конфиденциальности</a></li>
-                        <li><a href="#" data-ru="Пользовательское соглашение" data-en="User Agreement" data-tk="Ulanyjy şertnamasy" data-zh="用户协议">Пользовательское соглашение</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2023 <span data-ru="Бюро переводов MyLingvo.by. Все права защищены." data-en="MyLingvo.by Translation Agency. All rights reserved." data-tk="MyLingvo.by terjime edarasy. Ähli hukuklar goralandyr." data-zh="MyLingvo.by翻译机构。版权所有。">Бюро переводов MyLingvo.by. Все права защищены.</span></p>
-            </div>
-        </div>
-    </footer>
+    </div>
 
     <script>
-        // Текущий язык
-        let currentLanguage = 'ru';
+        // Конфигурация
+        const STORAGE_KEY = 'showerBookings';
+        const ADMIN_PASSWORD = 'admin123';
+        let currentUser = '';
+        let selectedGender = 'male';
+        let selectedSlots = '1';
+        let selectedDuration = '30';
+        let selectedHours = '12';
+        let selectedMinutes = '00';
+        let isAdmin = false;
 
-        // Анимация загрузки северного сияния
-        document.addEventListener('DOMContentLoaded', function() {
-            const auroraAnimation = document.getElementById('auroraAnimation');
-            
-            // Скрываем анимацию через 3 секунды
-            setTimeout(() => {
-                auroraAnimation.classList.add('hidden');
-            }, 3000);
-            
-            // Восстанавливаем язык из localStorage
-            const savedLanguage = localStorage.getItem('language');
-            if (savedLanguage) {
-                changeLanguage(savedLanguage);
-            }
-            
-            // Инициализация анимации Земли
-            initEarthAnimation();
-        });
-
-        // Переключение языков
-        const langButtons = document.querySelectorAll('.lang-btn');
-        
-        langButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const lang = this.getAttribute('data-lang');
-                changeLanguage(lang);
-                
-                // Обновляем активную кнопку
-                langButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        // Функция смены языка
-        function changeLanguage(lang) {
-            currentLanguage = lang;
-            
-            // Обновляем все элементы с data-атрибутами
-            document.querySelectorAll('[data-ru]').forEach(element => {
-                if (element.dataset[lang]) {
-                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                        element.placeholder = element.dataset[lang];
-                    } else if (element.tagName === 'OPTION') {
-                        element.textContent = element.dataset[lang];
-                    } else {
-                        element.textContent = element.dataset[lang];
-                    }
-                }
-            });
-            
-            // Сохраняем выбор языка
-            localStorage.setItem('language', lang);
+        // Функция для получения текущего пользователя
+        function getCurrentUser() {
+            return localStorage.getItem('currentUser') || '';
         }
 
-        // Переключение вкладок прайс-листа
-        const pricingTabs = document.querySelectorAll('.pricing-tab');
-        const pricingContents = document.querySelectorAll('.pricing-content');
-        
-        pricingTabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                const tabId = this.getAttribute('data-tab');
-                
-                // Убираем активный класс у всех вкладок и контента
-                pricingTabs.forEach(t => t.classList.remove('active'));
-                pricingContents.forEach(c => c.classList.remove('active'));
-                
-                // Добавляем активный класс текущей вкладке и соответствующему контенту
-                this.classList.add('active');
-                document.getElementById(tabId).classList.add('active');
-            });
-        });
+        // Функция для сохранения текущего пользователя
+        function setCurrentUser(userName) {
+            localStorage.setItem('currentUser', userName);
+            currentUser = userName;
+        }
 
-        // Плавная прокрутка для навигации
-        const navLinks = document.querySelectorAll('.nav-link');
-        
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                
-                // Обновляем активную ссылку в навигации
-                navLinks.forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Плавная прокрутка к секции
-                window.scrollTo({
-                    top: targetSection.offsetTop - 20,
-                    behavior: 'smooth'
+        // Инициализация кастомных селектов
+        function initializeCustomSelects() {
+            // Gender select
+            const genderSelect = document.getElementById('genderSelect');
+            const genderDropdown = document.getElementById('genderDropdown');
+            const genderOptions = genderDropdown.querySelectorAll('.dropdown-option');
+
+            genderSelect.addEventListener('click', () => {
+                genderDropdown.classList.toggle('active');
+            });
+
+            genderOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedGender = option.dataset.value;
+                    genderSelect.textContent = option.textContent;
+                    genderOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    genderDropdown.classList.remove('active');
                 });
             });
-        });
 
-        // Обработка отправки формы
-        const orderForm = document.getElementById('orderForm');
-        
-        orderForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+            // Slots select
+            const slotsSelect = document.getElementById('slotsSelect');
+            const slotsDropdown = document.getElementById('slotsDropdown');
+            const slotsOptions = slotsDropdown.querySelectorAll('.dropdown-option');
+
+            slotsSelect.addEventListener('click', () => {
+                slotsDropdown.classList.toggle('active');
+            });
+
+            slotsOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedSlots = option.dataset.value;
+                    slotsSelect.textContent = option.textContent;
+                    slotsOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    slotsDropdown.classList.remove('active');
+                });
+            });
+
+            // Hours select
+            const hoursSelect = document.getElementById('hoursSelect');
+            const hoursDropdown = document.getElementById('hoursDropdown');
             
-            // Получаем данные формы
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            const language = document.getElementById('language').value;
-            const message = document.getElementById('message').value;
+            // Создаем опции для часов (00-23)
+            for (let i = 0; i < 24; i++) {
+                const hour = i.toString().padStart(2, '0');
+                const option = document.createElement('div');
+                option.className = 'dropdown-option';
+                option.dataset.value = hour;
+                option.textContent = hour;
+                hoursDropdown.appendChild(option);
+            }
+
+            hoursSelect.addEventListener('click', () => {
+                hoursDropdown.classList.toggle('active');
+            });
+
+            hoursDropdown.querySelectorAll('.dropdown-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedHours = option.dataset.value;
+                    hoursSelect.textContent = selectedHours;
+                    hoursDropdown.querySelectorAll('.dropdown-option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    hoursDropdown.classList.remove('active');
+                });
+            });
+
+            // Minutes select
+            const minutesSelect = document.getElementById('minutesSelect');
+            const minutesDropdown = document.getElementById('minutesDropdown');
             
-            // Сообщения на разных языках
-            const messages = {
-                'ru': `Спасибо, ${name}! Ваша заявка принята. Мы свяжемся с вами по номеру ${phone} в ближайшее время.`,
-                'en': `Thank you, ${name}! Your request has been accepted. We will contact you at ${phone} shortly.`,
-                'tk': `Sagboluň, ${name}! Haýyşyňyz kabul edildi. ${phone} belgisi boýunça gysga wagtyň içinde siziň bilen habarlaşarys.`,
-                'zh': `谢谢，${name}！您的请求已被接受。我们将很快通过${phone}与您联系。`
+            // Создаем опции для минут (00-55 с шагом 5)
+            for (let i = 0; i < 60; i++) {
+                const minute = i.toString().padStart(2, '0');
+                const option = document.createElement('div');
+                option.className = 'dropdown-option';
+                option.dataset.value = minute;
+                option.textContent = minute;
+                minutesDropdown.appendChild(option);
+            }
+
+            minutesSelect.addEventListener('click', () => {
+                minutesDropdown.classList.toggle('active');
+            });
+
+            minutesDropdown.querySelectorAll('.dropdown-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedMinutes = option.dataset.value;
+                    minutesSelect.textContent = selectedMinutes;
+                    minutesDropdown.querySelectorAll('.dropdown-option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    minutesDropdown.classList.remove('active');
+                });
+            });
+
+            // Duration select - от 1 до 30 минут
+            const durationSelect = document.getElementById('durationSelect');
+            const durationDropdown = document.getElementById('durationDropdown');
+            
+            // Создаем опции для длительности (1-30 минут)
+            for (let i = 1; i <= 30; i++) {
+                const option = document.createElement('div');
+                option.className = 'dropdown-option';
+                option.dataset.value = i;
+                option.textContent = i + ' минут';
+                durationDropdown.appendChild(option);
+            }
+
+            durationSelect.addEventListener('click', () => {
+                durationDropdown.classList.toggle('active');
+            });
+
+            durationDropdown.querySelectorAll('.dropdown-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedDuration = option.dataset.value;
+                    durationSelect.textContent = option.textContent;
+                    durationDropdown.querySelectorAll('.dropdown-option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    durationDropdown.classList.remove('active');
+                });
+            });
+
+            // Закрытие dropdown при клике вне
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.custom-select')) {
+                    document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+                        dropdown.classList.remove('active');
+                    });
+                }
+            });
+        }
+
+        // Функции для работы с LocalStorage
+        function getBookings() {
+            const bookings = localStorage.getItem(STORAGE_KEY);
+            return bookings ? JSON.parse(bookings) : [];
+        }
+
+        function saveBookings(bookings) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
+        }
+
+        // Проверка доступности времени с учетом пола
+        function isTimeSlotAvailable(startTime, duration, slotsCount, gender, userName) {
+            const bookings = getBookings();
+            const newStart = new Date(`1970-01-01T${startTime}`);
+            const newEnd = new Date(newStart.getTime() + duration * 60000);
+
+            let totalSlotsUsed = 0;
+
+            for (const booking of bookings) {
+                const existingStart = new Date(`1970-01-01T${booking.time}`);
+                const existingEnd = new Date(existingStart.getTime() + booking.duration * 60000);
+
+                const timeConflict = (newStart < existingEnd) && (newEnd > existingStart);
+
+                if (timeConflict) {
+                    // Если разный пол - блокируем полностью
+                    if (booking.gender !== gender) {
+                        return false;
+                    }
+                    // Если тот же пол - считаем занятые слоты
+                    totalSlotsUsed += parseInt(booking.slotsCount);
+                }
+            }
+
+            // Проверяем, хватает ли свободных слотов
+            return (totalSlotsUsed + parseInt(slotsCount)) <= 2;
+        }
+
+        // Проверка и удаление истекших броней
+        function removeExpiredBookings() {
+            const bookings = getBookings();
+            const now = new Date();
+            const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            
+            const validBookings = bookings.filter(booking => {
+                const bookingEnd = new Date(`1970-01-01T${booking.time}`);
+                bookingEnd.setMinutes(bookingEnd.getMinutes() + booking.duration);
+                const bookingEndTime = bookingEnd.toTimeString().substring(0, 5);
+                
+                return currentTime < bookingEndTime;
+            });
+
+            if (validBookings.length !== bookings.length) {
+                saveBookings(validBookings);
+            }
+            
+            return validBookings;
+        }
+
+        // Основная функция бронирования
+        function bookSlot() {
+            const userName = document.getElementById('userName').value.trim();
+            const bookingDuration = parseInt(selectedDuration);
+
+            const bookingTime = `${selectedHours}:${selectedMinutes}`;
+
+            // Сброс сообщений
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = '';
+            messageDiv.className = '';
+
+            // Валидация
+            if (!userName) {
+                showMessage('Пожалуйста, введите ваше имя.', 'error');
+                return;
+            }
+
+            if (selectedHours === '00' && selectedMinutes === '00') {
+                showMessage('Пожалуйста, выберите корректное время.', 'error');
+                return;
+            }
+
+            // Проверка доступности времени
+            if (!isTimeSlotAvailable(bookingTime, bookingDuration, selectedSlots, selectedGender, userName)) {
+                showMessage('❌ Это время уже занято или нет свободных ключей.', 'error');
+                return;
+            }
+
+            // Создание новой брони
+            const newBooking = {
+                id: Date.now(),
+                name: userName,
+                gender: selectedGender,
+                slotsCount: selectedSlots,
+                time: bookingTime,
+                duration: bookingDuration,
+                user: userName // Сохраняем имя пользователя
             };
+
+            // Сохранение
+            const bookings = getBookings();
+            bookings.push(newBooking);
+            saveBookings(bookings);
+
+            // Сохраняем текущего пользователя
+            setCurrentUser(userName);
+
+            // Показ успешного сообщения
+            showMessage('✅ Забронированно!', 'success');
+            displayBookings();
+
+            // Очистка формы (кроме имени)
+            document.getElementById('userName').value = '';
+        }
+
+        // Функция для отображения сообщений
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = text;
+            messageDiv.className = `message ${type}`;
             
-            alert(messages[currentLanguage]);
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageDiv.innerHTML = '';
+                    messageDiv.className = '';
+                }, 3000);
+            }
+        }
+
+        // Функция для отображения списка бронирований
+        function displayBookings() {
+            const bookingsList = document.getElementById('bookingsList');
+            let bookings = removeExpiredBookings(); // Удаляем истекшие
+            const now = new Date();
+            const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+            // Сортируем брони по времени
+            bookings.sort((a, b) => a.time.localeCompare(b.time));
+
+            if (bookings.length === 0) {
+                bookingsList.innerHTML = `
+                    <div class="empty-state">
+                        <i>🎯</i>
+                        <div>Бронирований пока нет</div>
+                    </div>
+                `;
+                return;
+            }
+
+            bookingsList.innerHTML = '';
+            bookings.forEach(booking => {
+                const bookingDiv = document.createElement('div');
+                
+                const startTime = new Date(`1970-01-01T${booking.time}`);
+                const endTime = new Date(startTime.getTime() + booking.duration * 60000);
+                const endTimeString = endTime.toTimeString().substring(0, 5);
+                
+                // Проверяем истекла ли бронь
+                const isExpired = currentTime >= endTimeString;
+                
+                bookingDiv.className = `booking-item ${booking.gender} ${isExpired ? 'expired' : ''}`;
+
+                const genderIcon = booking.gender === 'male' ? '👨' : '';
+                const slotsText = booking.slotsCount === '2' ? ' (2 ключа)' : '';
+
+                // Проверяем, может ли текущий пользователь отменить бронь
+                const canCancel = currentUser === booking.user || isAdmin;
+
+                bookingDiv.innerHTML = `
+                    <div class="booking-info">
+                        <div class="booking-name">
+                            ${genderIcon} ${booking.name}
+                            ${isExpired ? '<span class="expired-badge">Истекло</span>' : ''}
+                        </div>
+                        <div class="booking-details">
+                            ${booking.duration} минут${slotsText}
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="booking-time">${booking.time} - ${endTimeString}</div>
+                        <button class="cancel-btn" onclick="cancelBooking(${booking.id})" ${!canCancel || isExpired ? 'disabled' : ''}>
+                            ${canCancel && !isExpired ? 'Отмена' : '🔒'}
+                        </button>
+                    </div>
+                `;
+                bookingsList.appendChild(bookingDiv);
+            });
+        }
+
+        // Функция для отмены бронирования
+        function cancelBooking(bookingId) {
+            const bookings = getBookings();
+            const booking = bookings.find(b => b.id === bookingId);
             
-            // Очищаем форму
-            orderForm.reset();
+            if (!booking) return;
+
+            // Проверка прав
+            if (currentUser !== booking.user && !isAdmin) {
+                showMessage('❌ Вы можете отменять только свои брони.', 'error');
+                return;
+            }
+
+            if (confirm('Вы уверены, что хотите отменить эту бронь?')) {
+                const updatedBookings = bookings.filter(b => b.id !== bookingId);
+                saveBookings(updatedBookings);
+                displayBookings();
+                showMessage('Бронь отменена', 'success');
+            }
+        }
+
+        // Админ функции
+        function showAdminPanel() {
+            showModal('adminAuthModal');
+        }
+
+        function hideAdminPanel() {
+            document.getElementById('adminPanel').classList.add('hidden');
+            isAdmin = false;
+            displayBookings(); // Перерисовываем чтобы скрыть кнопки отмены
+        }
+
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('adminPanel').classList.remove('hidden');
+                hideModal('adminAuthModal');
+                document.getElementById('adminPassword').value = '';
+                isAdmin = true;
+                displayBookings(); // Перерисовываем чтобы показать все кнопки отмены
+                showMessage('✅ Вы вошли как дежурный', 'success');
+            } else {
+                alert('Неверный пароль!');
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('ВНИМАНИЕ! Это удалит ВСЕ брони. Продолжить?')) {
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem('currentUser');
+                currentUser = '';
+                displayBookings();
+                showMessage('Все брони очищены', 'success');
+                hideAdminPanel();
+            }
+        }
+
+        // Модальные окна
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Автоматическая очистка в полночь
+        function checkAndResetAtMidnight() {
+            const now = new Date();
+            const lastReset = localStorage.getItem('lastResetDate');
+            const today = now.toDateString();
+
+            if (lastReset !== today && now.getHours() === 0 && now.getMinutes() < 1) {
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.setItem('lastResetDate', today);
+                displayBookings();
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Восстанавливаем текущего пользователя
+            currentUser = getCurrentUser();
+            if (currentUser) {
+                document.getElementById('userName').value = currentUser;
+            }
+            
+            initializeCustomSelects();
+            displayBookings();
+            
+            // Проверяем истекшие брони каждую минуту
+            setInterval(() => {
+                displayBookings();
+            }, 60000);
+            
+            setInterval(checkAndResetAtMidnight, 60000);
+
+            // Устанавливаем начальные значения
+            document.querySelector('#genderDropdown .dropdown-option[data-value="male"]').click();
+            document.querySelector('#slotsDropdown .dropdown-option[data-value="1"]').click();
+            document.querySelector('#hoursDropdown .dropdown-option[data-value="12"]').click();
+            document.querySelector('#minutesDropdown .dropdown-option[data-value="00"]').click();
+            document.querySelector('#durationDropdown .dropdown-option[data-value="30"]').click();
+
+            // Фокус на поле имени
+            document.getElementById('userName').focus();
         });
 
-        // Обновление активной ссылки при прокрутке
-        window.addEventListener('scroll', function() {
-            const sections = document.querySelectorAll('section');
-            const navLinks = document.querySelectorAll('.nav-link');
-            
-            let currentSection = '';
-            
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                
-                if (pageYOffset >= sectionTop - 100) {
-                    currentSection = section.getAttribute('id');
+        // Закрытие модальных окон при клике вне контента
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
                 }
             });
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${currentSection}`) {
-                    link.classList.add('active');
-                }
-            });
-            
-            // Управление анимацией Земли
-            updateEarthAnimation();
         });
-
-        // Three.js анимация Земли с FBX
-        let scene, camera, renderer, earthObject;
-        let isEarthLoaded = false;
-        let earthRotationSpeed = 0.002;
-        let targetScale = 1;
-        let currentScale = 1;
-        let isZooming = false;
-        let zoomProgress = 0;
-
-function initEarthAnimation() {
-    // Создаем сцену
-    scene = new THREE.Scene();
-    
-    // Создаем камеру
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 5;
-    
-    // Создаем рендерер
-    renderer = new THREE.WebGLRenderer({ 
-        canvas: document.getElementById('earthCanvas'), 
-        alpha: true,
-        antialias: true 
-    });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x000000, 0);
-    
-    // Добавляем освещение
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-    
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(5, 3, 5);
-    scene.add(directionalLight);
-    
-    // Загружаем и собираем FBX модель из частей
-    loadEarthFromParts();
-    
-    // Обработка изменения размера окна
-    window.addEventListener('resize', onWindowResize);
-}
-
-// Новая функция для загрузки частей
-async function loadEarthFromParts() {
-    try {
-        console.log('Начинаю загрузку частей FBX модели...');
-        
-        // Список частей (замените на ваши реальные имена файлов)
-        const partFiles = [
-            'earth_part_aa',
-            'earth_part_ab'
-            // Добавьте остальные части если их больше
-        ];
-        
-        // Загружаем все части
-        const parts = [];
-        for (const partFile of partFiles) {
-            console.log(`Загружаю ${partFile}...`);
-            const response = await fetch(partFile);
-            if (!response.ok) {
-                throw new Error(`Не удалось загрузить ${partFile}: ${response.status}`);
-            }
-            const arrayBuffer = await response.arrayBuffer();
-            parts.push(arrayBuffer);
-            console.log(`${partFile} загружен (${arrayBuffer.byteLength} байт)`);
-        }
-        
-        // Объединяем в один файл
-        console.log('Объединяю части...');
-        const totalLength = parts.reduce((sum, part) => sum + part.byteLength, 0);
-        const fullArray = new Uint8Array(totalLength);
-        
-        let offset = 0;
-        for (const part of parts) {
-            fullArray.set(new Uint8Array(part), offset);
-            offset += part.byteLength;
-        }
-        
-        console.log(`Файл собран: ${totalLength} байт`);
-        
-        // Создаем Blob и загружаем через FBXLoader
-        const blob = new Blob([fullArray], {type: 'application/octet-stream'});
-        const objectUrl = URL.createObjectURL(blob);
-        
-        const loader = new THREE.FBXLoader();
-        
-        loader.load(objectUrl, 
-            // Успешная загрузка
-            function(object) {
-                console.log('✅ FBX модель успешно загружена!');
-                earthObject = object;
-                scene.add(earthObject);
-                isEarthLoaded = true;
-                
-                // Настройка модели
-                earthObject.scale.set(0.01, 0.01, 0.01);
-                
-                // Центрируем модель
-                const box = new THREE.Box3().setFromObject(earthObject);
-                const center = box.getCenter(new THREE.Vector3());
-                earthObject.position.sub(center);
-                
-                // Освобождаем память
-                URL.revokeObjectURL(objectUrl);
-                
-                console.log('3D Земля готова к анимации');
-                
-                // Запускаем анимацию
-                animateEarth();
-            },
-            // Прогресс загрузки
-            function(xhr) {
-                console.log((xhr.loaded / xhr.total * 100) + '% загружено');
-            },
-            // Ошибка загрузки
-            function(error) {
-                console.error('❌ Ошибка загрузки FBX:', error);
-                // Показываем fallback
-                document.getElementById('earthFallback').style.opacity = '1';
-            }
-        );
-        
-    } catch (error) {
-        console.error('❌ Ошибка при загрузке частей:', error);
-        // Показываем fallback
-        document.getElementById('earthFallback').style.opacity = '1';
-    }
-}
     </script>
 </body>
 </html>
